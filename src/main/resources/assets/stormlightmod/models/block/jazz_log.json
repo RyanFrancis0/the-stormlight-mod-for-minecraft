@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "stormlightmod:blocks/jazz_log_top",
+        "side": "stormlightmod:blocks/jazz_log"
+    }
+}

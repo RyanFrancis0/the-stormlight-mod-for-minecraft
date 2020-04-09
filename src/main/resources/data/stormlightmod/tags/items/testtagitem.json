@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"stormlightmod:example_item",
+		"stormlightmod:test_item",
+		"minecraft:apple"
+	]
+}

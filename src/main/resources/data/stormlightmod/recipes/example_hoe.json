@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:apple"
+    },
+    {
+      "item": "stormlightmod:example_item"
+    }
+  ],
+  "result": {
+    "item": "stormlightmod:example_hoe"
+  }
+}

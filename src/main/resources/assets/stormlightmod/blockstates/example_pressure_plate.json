@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "powered=false": { "model": "stormlightmod:block/example_pressure_plate" },
+        "powered=true": { "model": "stormlightmod:block/example_pressure_plate_down" }
+    }
+}

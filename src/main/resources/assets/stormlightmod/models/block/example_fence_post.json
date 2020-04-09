@@ -1,0 +1,6 @@
+{
+    "parent": "block/fence_post",
+    "textures": {
+        "texture": "stormlightmod:blocks/example_block"
+    }
+}

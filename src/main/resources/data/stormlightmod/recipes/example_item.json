@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "stormlightmod:example_block"
+  },
+  "result": "stormlightmod:example_item",
+  "experience": 5.0,
+  "cookingtime": 50
+}

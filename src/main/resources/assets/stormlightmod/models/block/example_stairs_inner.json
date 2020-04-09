@@ -1,0 +1,8 @@
+{
+    "parent": "block/inner_stairs",
+    "textures": {
+        "bottom": "stormlightmod:blocks/example_block",
+        "top": "stormlightmod:blocks/example_block",
+        "side": "stormlightmod:blocks/example_block"
+    }
+}

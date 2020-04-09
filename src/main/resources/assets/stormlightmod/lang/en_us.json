@@ -1,0 +1,37 @@
+{
+	"item.stormlightmod.example_item": "Example Item",
+	"item.stormlightmod.test_item": "Test Item",
+	"item.stormlightmod.special_item": "Special Item",
+	"item.stormlightmod.def_item": "Deferred Item",
+	
+	"item.stormlightmod.example_sword": "Example Sword",
+	"item.stormlightmod.example_pickaxe": "Example Pickaxe",
+	"item.stormlightmod.example_shovel": "Example Shovel",
+	"item.stormlightmod.example_axe": "Example Axe",
+	"item.stormlightmod.example_hoe": "Example Hoe",
+	
+	"item.stormlightmod.test_helmet": "Test Helmet",
+	"item.stormlightmod.test_chestplate": "Test Chestplate",
+	"item.stormlightmod.test_leggings": "Test Leggings",
+	"item.stormlightmod.test_boots": "Test Boots",
+	
+	"block.stormlightmod.example_block": "Example Block",
+	"block.stormlightmod.specal_block": "Specal Block",
+	"block.stormlightmod.example_button": "Example Button",
+	"block.stormlightmod.example_stairs": "Example Stairs",
+	"block.stormlightmod.example_pressure_plate": "Example Pressure Plate",
+	"block.stormlightmod.example_fence": "Example Fence",
+	"block.stormlightmod.example_chest": "Example Chest",
+	"block.stormlightmod.def_block": "Deferred Block",
+	"block.stormlightmod.quarry": "\u00A76Quarry",
+	"block.stormlightmod.jazz_planks": "Jazz Planks",
+	"block.stormlightmod.jazz_log": "Jazz Log",
+	"block.stormlightmod.jazz_sapling": "Jazz Sapling",
+	"block.stormlightmod.jazz_leaves": "Jazz Leaves",
+	
+	"container.example_chest": "Example Chest",
+	
+	"itemGroup.stormlighttab": "stormlight Tab",
+	
+	"generator.example_world": "Example"
+}

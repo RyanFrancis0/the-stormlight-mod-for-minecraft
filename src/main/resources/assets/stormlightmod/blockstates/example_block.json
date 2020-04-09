@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "stormlightmod:block/example_block" }
+    }
+}

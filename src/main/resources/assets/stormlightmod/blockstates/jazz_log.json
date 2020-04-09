@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "axis=y":  { "model": "stormlightmod:block/jazz_log" },
+        "axis=z":   { "model": "stormlightmod:block/jazz_log", "x": 90 },
+        "axis=x":   { "model": "stormlightmod:block/jazz_log", "x": 90, "y": 90 }
+    }
+}

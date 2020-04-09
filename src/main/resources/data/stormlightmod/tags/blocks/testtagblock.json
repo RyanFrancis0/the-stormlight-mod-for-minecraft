@@ -1,0 +1,7 @@
+{
+	"replace": false,
+	"values": [
+		"stormlightmod:example_block",
+		"minecraft:cactus"
+	]
+}
