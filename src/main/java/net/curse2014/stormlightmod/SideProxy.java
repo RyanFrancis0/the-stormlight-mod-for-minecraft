@@ -1,5 +1,7 @@
 package net.curse2014.stormlightmod;
 
+import net.curse2014.stormlightmod.init.ModBlocks;
+import net.curse2014.stormlightmod.init.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
@@ -11,6 +13,8 @@ public class SideProxy {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SideProxy::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SideProxy::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SideProxy::processIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModBlocks::registerAll);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModItems::registerAll);
         MinecraftForge.EVENT_BUS.addListener(SideProxy::serverStarting);
     }
 
