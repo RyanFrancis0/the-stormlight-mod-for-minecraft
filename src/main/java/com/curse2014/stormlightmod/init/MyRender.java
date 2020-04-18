@@ -12,6 +12,6 @@ public class MyRender extends ItemRenderer {
         super(p_i46552_1_, p_i46552_2_, p_i46552_3_);
     }
 
-    @Override
-    
+
+
 }

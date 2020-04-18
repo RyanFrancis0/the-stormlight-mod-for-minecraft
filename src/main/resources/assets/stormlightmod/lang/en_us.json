@@ -2,6 +2,7 @@
 	"item.stormlightmod.example_item": "Example Item",
 	"item.stormlightmod.test_item": "Test Item",
 	"item.stormlightmod.special_item": "Special Item",
+	"item.stormlightmod.sphere_item": "Sphere Item",
 	"item.stormlightmod.def_item": "Deferred Item",
 	
 	"item.stormlightmod.example_sword": "Example Sword",
@@ -33,5 +34,7 @@
 	
 	"itemGroup.stormlighttab": "stormlight Tab",
 	
-	"generator.example_world": "Example"
+	"generator.example_world": "Example",
+
+	"effect.stormlightmod.StormlightEffect": "Stormlight"
 }

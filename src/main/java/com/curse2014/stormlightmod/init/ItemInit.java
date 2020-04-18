@@ -3,19 +3,12 @@ package com.curse2014.stormlightmod.init;
 import java.util.function.Supplier;
 
 import com.curse2014.stormlightmod.StormlightMod;
+import com.curse2014.stormlightmod.objects.items.ShardBladeItem;
 import com.curse2014.stormlightmod.objects.items.SpecialItem;
 
+import com.curse2014.stormlightmod.objects.items.SphereItem;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.Food;
-import net.minecraft.item.HoeItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
-import net.minecraft.item.PickaxeItem;
-import net.minecraft.item.ShovelItem;
-import net.minecraft.item.SwordItem;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -61,6 +54,11 @@ public class ItemInit {
 										.setRegistryName("test_item"));
 		event.getRegistry().register(new SpecialItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
 				.setRegistryName("special_item"));
+
+		event.getRegistry().register(new SphereItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+				.setRegistryName("sphere_item"));
+		event.getRegistry().register(new ShardBladeItem(ItemTier.DIAMOND, 15, 5, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+				.setRegistryName("shard_blade_item"));
 
 		// Tools
 		event.getRegistry().register(

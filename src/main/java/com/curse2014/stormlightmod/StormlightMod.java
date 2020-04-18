@@ -1,18 +1,10 @@
 package com.curse2014.stormlightmod;
 
+import com.curse2014.stormlightmod.init.*;
 import com.curse2014.stormlightmod.world.gen.StormlightOreGen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.curse2014.stormlightmod.init.BiomeInit;
-import com.curse2014.stormlightmod.init.BlockInit;
-import com.curse2014.stormlightmod.init.BlockInitNew;
-import com.curse2014.stormlightmod.init.DimensionInit;
-import com.curse2014.stormlightmod.init.ItemInitNew;
-import com.curse2014.stormlightmod.init.ModContainerTypes;
-import com.curse2014.stormlightmod.init.ModEntityTypes;
-import com.curse2014.stormlightmod.init.ModTileEntityTypes;
-import com.curse2014.stormlightmod.init.SoundInit;
 import com.curse2014.stormlightmod.objects.blocks.ModCropBlock;
 //import com.turtywurty.tutorialmod.world.worldtype.ExampleWorldType;
 
@@ -59,6 +51,7 @@ public class StormlightMod {
 
 		BiomeInit.BIOMES.register(modEventBus);
 		DimensionInit.MOD_DIMENSIONS.register(modEventBus);
+		//EffectInit.POTIONS.register(modEventBus);\
 
 		instance = this;
 		MinecraftForge.EVENT_BUS.register(this);
