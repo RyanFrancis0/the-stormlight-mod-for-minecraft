@@ -5,6 +5,7 @@ import com.curse2014.stormlightmod.init.BlockInitNew;
 import com.curse2014.stormlightmod.init.EffectInit;
 import com.curse2014.stormlightmod.init.ItemInitNew;
 import com.curse2014.stormlightmod.util.helpers.KeyboardHelper;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -33,7 +34,7 @@ import java.util.function.Consumer;
 
 //import static com.curse2014.stormlightmod.init.EffectInit.STORMLIGHT_EFFECT;
 
-public class SphereItem extends Item {
+public class SphereItem extends SwordItem {
     private int maxStormlight = 4800;//should be some function of sphere type & size, when add diff types and sizes
     //game is 20 ticks/s so 4800 == 4 minutes;
     private int drainRate = 20;
@@ -47,28 +48,26 @@ public class SphereItem extends Item {
     private Consumer<PlayerEntity> uh = new Consumer<PlayerEntity>() {
         @Override
         public void accept(PlayerEntity playerEntity) {
-
+            playerEntity.sendBreakAnimation(playerEntity.getActiveHand());
         }
     };
     private int count = 0;
 
     //diamond chip
     public SphereItem(Properties properties) {
-        super(properties);
+        super(ItemTier.WOOD, 0, 0, properties.maxDamage(4800).defaultMaxDamage(4800));
         this.type = 1;
         this.size = 1;
         this.value = 1;
-        properties.maxStackSize(1);
-        properties.maxDamage(this.maxStormlight);
-        //properties.setNoRepair();
+        //properties.maxStackSize(1);
     }
 
-    public SphereItem(Properties properties, int type, int size, int value) {
+    /*public SphereItem(Properties properties, int type, int size, int value) {
         super(properties);
         this.type = type;
         this.size = size;
         this.value = value;
-        /* could do this but have to register other values anyway
+        //could do this but have to register other values anyway
         switch (type) {
             case 1:
                 switch (size) {
@@ -81,8 +80,24 @@ public class SphereItem extends Item {
                         this.value = 20;
                 }
         }
-        */
+
+    }*/
+
+    /*
+    @Override
+    public ActionResultType onItemUse(ItemUseContext context) {
+        World world = context.getWorld();
+        PlayerEntity player = context.getPlayer();
+        if (!world.isRemote) {
+            if (player != null) {
+                context.getItem().damageItem(1, player, (p_220043_1_) -> {
+                    p_220043_1_.sendBreakAnimation(context.getHand());
+                });
+            }
+        }
+        return ActionResultType.SUCCESS;
     }
+     */
 
     @Override
     public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
@@ -105,7 +120,7 @@ public class SphereItem extends Item {
         if (compoundnbt.getBoolean(this.inUse)) {
             playerIn.removePotionEffect(effect.getPotion());
             compoundnbt.putBoolean(this.inUse, false);
-        } else {
+        } else if (itemStack.getDamage() > 1) {
             EffectInstance temp = new EffectInstance(
                     EffectInit.stormlight, itemStack.getDamage() - 1
             );
@@ -120,6 +135,7 @@ public class SphereItem extends Item {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         count += 1;
         if (count == 20) {
+            PlayerEntity player = ((PlayerEntity) entityIn);
             count = 0;
             CompoundNBT compoundnbt = stack.getTag();
             if (compoundnbt == null) {
@@ -127,15 +143,20 @@ public class SphereItem extends Item {
                 compoundnbt = stack.getTag();
             }
             int usingDrainRate = 20;
-            if (stack.getDamage() <= usingDrainRate && compoundnbt.getBoolean(this.inUse)) {
-                ((PlayerEntity) entityIn).removePotionEffect(this.effect.getPotion());
-                compoundnbt.putBoolean(this.inUse, false);
+            if (stack.getDamage() <= usingDrainRate) {
+                if (compoundnbt.getBoolean(this.inUse)) {
+                    player.removePotionEffect(this.effect.getPotion());
+                    compoundnbt.putBoolean(this.inUse, false);
+                }
+                this.setDamage(stack, 1);
             } else {
                 if (compoundnbt.getBoolean(this.inUse)) {
-                    stack.damageItem(usingDrainRate, (PlayerEntity) entityIn, uh);
+                    stack.damageItem(usingDrainRate, player, (p_220000_1_) ->
+                            p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
                     //stack.setDamage(stack.getDamage() - usingDrainRate);
                 } else {
-                    stack.damageItem(1, (PlayerEntity) entityIn, uh);
+                    stack.damageItem(1, player, (p_220000_1_) ->
+                            p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
                     //stack.setDamage(stack.getDamage() - 1);
                 }
             }

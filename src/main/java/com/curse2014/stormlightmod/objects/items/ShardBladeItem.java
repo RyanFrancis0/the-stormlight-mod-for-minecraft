@@ -3,9 +3,8 @@ package com.curse2014.stormlightmod.objects.items;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
+import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
@@ -35,16 +34,31 @@ public class ShardBladeItem extends SwordItem {
     }
 
     @Override
+    public boolean canHarvestBlock(BlockState blockState) {
+        return false;
+    }
 
-
+    @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if (this.master == null) {
-            this.master = playerIn;
-            playerIn.sendMessage(new StringTextComponent("You have bonded " + name));
+        ItemStack itemStack = playerIn.getHeldItem(handIn);
 
+        CompoundNBT compoundnbt = itemStack.getTag();
+        String playerId = playerIn.getDisplayNameAndUUID().getString();
+        if (compoundnbt == null) {
+            itemStack.setTag(new CompoundNBT());
+            compoundnbt = itemStack.getTag();
+            compoundnbt.putString("player", "");
+            compoundnbt.putString("name", this.name);
+        }
+        if (compoundnbt.getString("player").equals("")) {
+            compoundnbt.putString("player", playerId);
+            playerIn.sendMessage(new StringTextComponent(
+                    "You have bonded " + compoundnbt.getString("name"))
+            );
         } else {
-            if (!master.inventory.mainInventory.contains(this)) {
-            }
+            playerIn.sendMessage(new StringTextComponent(
+                    "You cannot claim this blade.")
+            );
         }
         return ActionResult.resultPass(playerIn.getHeldItem(handIn));
     }

@@ -1,7 +1,15 @@
 package com.curse2014.stormlightmod;
 
+import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
+import com.curse2014.stormlightmod.capabilities.PlayerInfo;
+import com.curse2014.stormlightmod.capabilities.PlayerInfoProvider;
+import com.curse2014.stormlightmod.capabilities.PlayerInfoStorage;
 import com.curse2014.stormlightmod.init.*;
 import com.curse2014.stormlightmod.world.gen.StormlightOreGen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +37,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod("stormlightmod")
-@Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Bus.MOD)
+@Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Bus.MOD)//, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class StormlightMod {
 
 	public static final Logger LOGGER = LogManager.getLogger();
@@ -40,6 +48,7 @@ public class StormlightMod {
 
 	public StormlightMod() {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
 		modEventBus.addListener(this::setup);
 
 		SoundInit.SOUNDS.register(modEventBus);
@@ -77,8 +86,28 @@ public class StormlightMod {
 		BiomeInit.registerBiomes();
 	}
 
-	private void setup(final FMLCommonSetupEvent event) {
+	@SubscribeEvent
+	public void attachCapability(AttachCapabilitiesEvent<Entity> event)
+	{
+		if (event.getObject() instanceof PlayerEntity) {
+			event.addCapability(
+					new ResourceLocation(StormlightMod.MOD_ID, "playerinfo"),
+					new PlayerInfoProvider()
+			);
+		}
+	}
 
+	@SubscribeEvent
+	public void onCommonSetup(FMLCommonSetupEvent event) {
+		CapabilityManager.INSTANCE.register(IPlayerInfo.class, new PlayerInfoStorage(), PlayerInfo::new);
+	}
+
+	/*@SubscribeEvent
+	public void onCommonSetup(FMLCommonSetupEvent event) {
+		CapabilityManager.INSTANCE.register(IPlayerInfo.class, new PlayerInfoStorage(), PlayerInfo::new);
+	}
+	*/
+	private void setup(FMLCommonSetupEvent event) {
 	}
 
 	@SubscribeEvent

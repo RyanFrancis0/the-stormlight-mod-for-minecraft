@@ -1,6 +1,7 @@
 package com.curse2014.stormlightmod.effects;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -34,16 +35,32 @@ public class StormlightEffect extends Effect {
             return;
         }
         PlayerEntity player = (PlayerEntity) entityLivingBaseIn;
-        player.heal(1);
+        if (player.getHealth() < player.getMaxHealth()) {
+            entityLivingBaseIn.heal(0.5F);
+        }
+        player.getFoodStats().setFoodSaturationLevel(0);
+        //faster,. then in armour increase jumping and
+        /* is possible to change player speed and gravity, best look back at
+        https://www.minecraftforge.net/forum/topic/29927-the-entity-attribute-system-how-to-manipulate-it-in-code/
+        player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier();
+        IAttributeInstance iattributeinstance = entityLivingBaseIn.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+        if (iattributeinstance.getModifier(PRINTING_SPEED_BOOST_ID) != null) {
+            iattributeinstance.removeModifier(LivingEntity.SWI);
+            player.getAttributes().applyAttributeModifiers();
+        }
+        private static final UUID pegasusBootsMoveBonusUUID = UUID.fromString("36A0FC05-50EB-460B-8961-615633A6D813");
+		private static final AttributeModifier pegasusBootsMoveBonus = (new AttributeModifier(pegasusBootsMoveBonusUUID, "Pegasus Boots Speed Bonus", 0.3D, 2)).setSaved(false);
+        player.getEntityAttribute(SharedMonsterAttributes.movementSpeed).applyModifier(pegasusBootsMoveBonus);
+        iattributeinstance.applyModifier(new AttributeModifier(UUID.fromString("dfg"), "Pegasus Boots Speed Bonus", 0.3D, 2));
+
+         */
     }
 
     @Override
     public void applyAttributesModifiersToEntity(LivingEntity entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier) {
         //insert stuff to so start of effect
         PlayerEntity player = (PlayerEntity) entityLivingBaseIn;
-        player.setAIMoveSpeed(player.getAIMoveSpeed() + 5f);
         player.setGlowing(true);
-
         super.applyAttributesModifiersToEntity(entityLivingBaseIn, attributeMapIn, amplifier);
     }
 
@@ -51,7 +68,6 @@ public class StormlightEffect extends Effect {
     public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier) {
         //insert stuff to do end of effect
         PlayerEntity player = (PlayerEntity) entityLivingBaseIn;
-        player.setAIMoveSpeed(player.getAIMoveSpeed() - 5f);
         player.setGlowing(false);
         super.removeAttributesModifiersFromEntity(entityLivingBaseIn, attributeMapIn, amplifier);
     }

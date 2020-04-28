@@ -1,40 +1,53 @@
 package com.curse2014.stormlightmod.events;
 
 import com.curse2014.stormlightmod.StormlightMod;
+import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
+import com.curse2014.stormlightmod.capabilities.PlayerInfo;
+import com.curse2014.stormlightmod.capabilities.PlayerInfoProvider;
 import com.curse2014.stormlightmod.objects.items.ShardBladeItem;
 import com.curse2014.stormlightmod.objects.items.SphereItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-//@Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class OnDropEvent {
+    private boolean keepTrach = false;
     @SubscribeEvent
     public static void onDropEvent(ItemTossEvent event) {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         PlayerEntity player = event.getPlayer();
         ItemStack tossed = event.getEntityItem().getItem();
         if (tossed.getItem() instanceof SphereItem) {
             if (tossed.getTag().getBoolean("inUse")) {
+                System.out.println("dropped an active sphere");
                 tossed.getTag().putBoolean("inUse", false);
                 player.removePotionEffect(((SphereItem) tossed.getItem()).effect.getPotion());
             }
         }
         if (tossed.getItem() instanceof ShardBladeItem) {
-            //store blade stats with player, or store blade with player somehow
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    player.inventory.addItemStackToInventory(tossed);
-                }
-            }, 10000);
-            event.getEntityItem().remove();
+            //dismiss item. consider something to let people share blades in the future.
+            //look into custom dismiss key perhaps and event.getEntityItem().onGround?
+            System.out.println(PlayerInfoProvider.PLAYER_INFO);
+            //LazyOptional<IPlayerInfo> blade = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null);
+            //IPlayerInfo um = null;
+            IPlayerInfo what = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
+
+            what.setBlade(event.getEntityItem().getEntityId());
+            System.out.println(event.getEntityItem().getEntityId());
+            IPlayerInfo uhm = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
+            System.out.println(uhm.getBlade());
+
+            //player.getEntityWorld().getChunkAt(player.getPosition()).removeEntity(event.getEntityItem());
+            event.getEntityItem().remove(true);
+            event.getEntityItem().revive();
         }
     }
 }

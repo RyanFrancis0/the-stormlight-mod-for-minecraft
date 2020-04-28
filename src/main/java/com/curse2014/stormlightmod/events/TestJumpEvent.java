@@ -9,16 +9,17 @@ import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 //import net.minecraftforge.fml.common.Mod;
-//import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 //I have this commented out beause it gets kinda laggy xd.
-//@Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID, bus = Bus.FORGE)
+//@Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Bus.FORGE)
 public class TestJumpEvent {
 	
 	@SubscribeEvent
 	public static void testJumpEvent(LivingJumpEvent event) {
-		StormlightMod.LOGGER.info("testJumpEvent fired");
+		StormlightMod.LOGGER.info("testJumpEvent firedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
 		LivingEntity livingEntity = event.getEntityLiving();
 		World world = livingEntity.getEntityWorld();
 		world.setBlockState(livingEntity.getPosition().add(0, 5, 0), BlockInit.example_block.getDefaultState());
