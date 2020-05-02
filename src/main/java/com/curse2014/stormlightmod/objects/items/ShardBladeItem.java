@@ -7,12 +7,14 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Timer;
 import java.util.stream.Stream;
@@ -25,6 +27,20 @@ public class ShardBladeItem extends SwordItem {
 
     public ShardBladeItem(IItemTier tier, int attackDamage, float attackSpeed, Properties properties) {
         super(tier, attackDamage, attackSpeed, properties);
+        /* still has a shadow
+        this.addPropertyOverride(new ResourceLocation("invisible"), ((itemStack, world, livingEntity) -> {
+            CompoundNBT compoundnbt = itemStack.getTag();
+            if (compoundnbt == null) {
+                //System.o
+                itemStack.setTag(new CompoundNBT());
+                compoundnbt = itemStack.getTag();
+                compoundnbt.putString("player", "");
+                compoundnbt.putString("name", this.name);
+                compoundnbt.putFloat("invisible", 0.0F);
+            }
+            return 1.0F;// compoundnbt.getFloat("invisible");
+        }));
+         */
     }
 
     @Override
@@ -34,10 +50,15 @@ public class ShardBladeItem extends SwordItem {
     }
 
     @Override
+    public int getHarvestLevel(ItemStack stack, net.minecraftforge.common.ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
+        return 0;
+    }
+
+    /*@Override
     public boolean canHarvestBlock(BlockState blockState) {
         return false;
     }
-
+    */
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);

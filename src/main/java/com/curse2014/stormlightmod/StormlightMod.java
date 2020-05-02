@@ -5,6 +5,7 @@ import com.curse2014.stormlightmod.capabilities.PlayerInfo;
 import com.curse2014.stormlightmod.capabilities.PlayerInfoProvider;
 import com.curse2014.stormlightmod.capabilities.PlayerInfoStorage;
 import com.curse2014.stormlightmod.init.*;
+import com.curse2014.stormlightmod.networking.StormlightModPacketHandler;
 import com.curse2014.stormlightmod.world.gen.StormlightOreGen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,6 +51,8 @@ public class StormlightMod {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
 		modEventBus.addListener(this::setup);
+
+		StormlightModPacketHandler.registerMessage();
 
 		SoundInit.SOUNDS.register(modEventBus);
 		ItemInitNew.ITEMS.register(modEventBus);

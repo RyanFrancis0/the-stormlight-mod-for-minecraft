@@ -30,6 +30,13 @@ public class ItemInit {
 	public static final Item test_item = null;
 	public static final Item special_item = null;
 
+	public static final Item shardblade_item = new ShardBladeItem(
+			ItemTier.DIAMOND,
+			20,
+			6,
+			new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)
+	);
+
 	// Tools
 	public static final Item example_sword = null;
 	public static final Item example_pickaxe = null;
@@ -57,8 +64,7 @@ public class ItemInit {
 
 		event.getRegistry().register(new SphereItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
 				.setRegistryName("sphere_item"));
-		event.getRegistry().register(new ShardBladeItem(ItemTier.DIAMOND, 15, 5, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
-				.setRegistryName("shard_blade_item"));
+		event.getRegistry().register(shardblade_item.setRegistryName("shard_blade_item"));
 
 		// Tools
 		event.getRegistry().register(

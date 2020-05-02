@@ -139,32 +139,30 @@ public class SphereItem extends SwordItem {
             count = 0;
             CompoundNBT compoundnbt = stack.getTag();
             if (compoundnbt == null) {
+                System.out.println("huh");
                 this.onCreated(stack, worldIn, (PlayerEntity) entityIn);
                 compoundnbt = stack.getTag();
             }
             int usingDrainRate = 20;
-            if (stack.getDamage() <= usingDrainRate) {
+            //System.out.println(stack.getMaxDamage());
+            if (stack.getMaxDamage() - stack.getDamage() <= usingDrainRate) {
                 if (compoundnbt.getBoolean(this.inUse)) {
                     player.removePotionEffect(this.effect.getPotion());
                     compoundnbt.putBoolean(this.inUse, false);
                 }
-                this.setDamage(stack, 1);
+                stack.setDamage(stack.getMaxDamage() - 1);
             } else {
                 if (compoundnbt.getBoolean(this.inUse)) {
-                    stack.damageItem(usingDrainRate, player, (p_220000_1_) ->
-                            p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
-                    //stack.setDamage(stack.getDamage() - usingDrainRate);
+                    //stack.damageItem(usingDrainRate, player, (p_220000_1_) ->
+                    //        p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
+                    stack.setDamage(stack.getDamage() + usingDrainRate);
                 } else {
-                    stack.damageItem(1, player, (p_220000_1_) ->
-                            p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
-                    //stack.setDamage(stack.getDamage() - 1);
+                    //stack.damageItem(1, player, (p_220000_1_) ->
+                    //        p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
+                    stack.setDamage(stack.getDamage() + 1);
                 }
             }
             if (worldIn.isThundering()) {
-                //move below line to world event
-                worldIn.setTimeLightningFlash(1);
-                worldIn.setThunderStrength(1.5f);
-                worldIn.setRainStrength(1.5f);
                 if (stack.getDamage() < stack.getMaxDamage() - 100) {
                     stack.setDamage(stack.getDamage() + 100);
                 } else {
