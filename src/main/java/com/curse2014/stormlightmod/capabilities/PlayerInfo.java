@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.UUID;
 
 public class PlayerInfo implements IPlayerInfo {
-    private float stormlight = 1000.0f;
+    private float stormlight = 0f; // max 1000
     private int blade = -1;
 
     @Override
@@ -16,7 +16,9 @@ public class PlayerInfo implements IPlayerInfo {
 
     @Override
     public void setStormlight(float stormlight) {
-        this.stormlight = stormlight;
+        if (0 <= stormlight && stormlight <= 1000) {
+            this.stormlight = stormlight;
+        }
     }
 
     @Override

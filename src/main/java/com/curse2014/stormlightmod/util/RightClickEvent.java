@@ -25,32 +25,17 @@ import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RightClickEvent {
     private static ArrayList<PlayerEntity> list = new ArrayList<>();
-
-    private static ItemStack example = new ItemStack(
-            new ShardBladeItem(
-                    ItemTier.DIAMOND,
-                    20,
-                    6,
-                    new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)
-            ).setRegistryName("shard_blade_item")
-    );
 
     @SubscribeEvent
     public static void rightClickEvent(PlayerInteractEvent.RightClickEmpty event) {
@@ -59,7 +44,8 @@ public class RightClickEvent {
         LazyOptional<IPlayerInfo> blade = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null);
         IPlayerInfo what = blade.orElse(null);
         World world = event.getWorld();
-        ItemEntity oldFriend = (ItemEntity) (world.getEntityByID(what.getBlade()) == null ? world.getEntityByID(what.getBlade() + 1) : world.getEntityByID(what.getBlade()));
+        ItemEntity oldFriend = (ItemEntity) (world.getEntityByID(what.getBlade()) == null
+            ? world.getEntityByID(what.getBlade() + 1) : world.getEntityByID(what.getBlade()));
         List<Entity> a = world.getServer().getWorld(DimensionType.THE_END).getEntities().collect(Collectors.toList());
         for (Entity b : a) {
             if (b.getEntityId() == what.getBlade() || b.getEntityId() == what.getBlade() + 1) {
@@ -71,10 +57,12 @@ public class RightClickEvent {
         System.out.println(what.getBlade());
         System.out.println("umm " + oldFriend);
         System.out.println((world.getEntityByID(what.getBlade() + 1)));
-        //ideally hsould create with more info than this, so u know its actually players blade, but i want results
+        //ideally should create with more info than this, so u know its actually players blade, but i want results
         */
 
         ItemStack stackToAdd = new ItemStack(ItemInit.shardblade_item);
+        //set durability and player id of blade to player's if and to previous durability, (wait, can they break?)
+        //also invent way for people to transfer blade w/out dying
         if (!list.contains(player) && !player.inventory.hasItemStack(stackToAdd)) {
             list.add(player);
             float delay = 10000;
@@ -88,11 +76,11 @@ public class RightClickEvent {
                 public void run() {
                     /*
                     Ugh this took so long to figure out what was wrong and then learn how to do it properly.
-                    Basically, this event is only called on the client side, but minecraft only recognises changes to
-                    inventory as legitimate if done to both sides. SO, need to create custom packet to send to server
-                    which does exact same thing as addItemStackToInventory and need to do it first so stack isn't
-                    'empty' whatever that means. Necessary to send player's id instead of player itself cos !player
-                    instanceof ServerPLayerEntity, but yes player instanceof ClientPlayerEntity.
+                    Basically, this event is only called on the client side so only have ClientSidePlayer and
+                    ClientSideWorld, but Minecraft only recognises changes to inventory as legitimate if done to
+                    both sides. SO, need to create custom packet to send to server to run addItemStackToInventory server
+                    side and need to do it first so stack isn't 'empty' whatever that means. Necessary to send player's
+                    id instead of player itself cos again its a ClientPlayerEntity.
                     */
                     StormlightModPacketHandler.INSTANCE.sendToServer(
                             new ShardbladePacket(stackToAdd, player.getUniqueID())

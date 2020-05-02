@@ -1,5 +1,7 @@
 package com.curse2014.stormlightmod.objects.items;
 
+import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
+import com.curse2014.stormlightmod.capabilities.PlayerInfoProvider;
 import com.curse2014.stormlightmod.effects.StormlightEffect;
 import com.curse2014.stormlightmod.init.BlockInitNew;
 import com.curse2014.stormlightmod.init.EffectInit;
@@ -121,11 +123,14 @@ public class SphereItem extends SwordItem {
             playerIn.removePotionEffect(effect.getPotion());
             compoundnbt.putBoolean(this.inUse, false);
         } else if (itemStack.getDamage() > 1) {
+            /*
             EffectInstance temp = new EffectInstance(
-                    EffectInit.stormlight, itemStack.getDamage() - 1
+                    EffectInit.stormlight,
+                    getStormlight(itemStack)
             );
             effect.combine(temp);
             playerIn.addPotionEffect(this.effect);
+             */
             compoundnbt.putBoolean(this.inUse, true);
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
@@ -136,6 +141,8 @@ public class SphereItem extends SwordItem {
         count += 1;
         if (count == 20) {
             PlayerEntity player = ((PlayerEntity) entityIn);
+            IPlayerInfo playerInfo = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null)
+                    .orElse(null);
             count = 0;
             CompoundNBT compoundnbt = stack.getTag();
             if (compoundnbt == null) {
@@ -145,7 +152,7 @@ public class SphereItem extends SwordItem {
             }
             int usingDrainRate = 20;
             //System.out.println(stack.getMaxDamage());
-            if (stack.getMaxDamage() - stack.getDamage() <= usingDrainRate) {
+            if (this.getStormlight(stack) <= usingDrainRate) {
                 if (compoundnbt.getBoolean(this.inUse)) {
                     player.removePotionEffect(this.effect.getPotion());
                     compoundnbt.putBoolean(this.inUse, false);
@@ -156,6 +163,8 @@ public class SphereItem extends SwordItem {
                     //stack.damageItem(usingDrainRate, player, (p_220000_1_) ->
                     //        p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
                     stack.setDamage(stack.getDamage() + usingDrainRate);
+                    playerInfo.setStormlight(playerInfo.getStormlight() + usingDrainRate);
+                    System.out.println(playerInfo.getStormlight());
                 } else {
                     //stack.damageItem(1, player, (p_220000_1_) ->
                     //        p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
@@ -163,10 +172,10 @@ public class SphereItem extends SwordItem {
                 }
             }
             if (worldIn.isThundering()) {
-                if (stack.getDamage() < stack.getMaxDamage() - 100) {
-                    stack.setDamage(stack.getDamage() + 100);
+                if (100 < stack.getDamage()) {
+                    stack.setDamage(stack.getDamage() - 100);
                 } else {
-                    stack.setDamage(stack.getMaxDamage());
+                    stack.setDamage(0);
                 }
             }
         }
@@ -193,7 +202,7 @@ public class SphereItem extends SwordItem {
     */
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (stack.getDamage() == 1) {
+        if (getStormlight(stack) == 1) {
             tooltip.add(new StringTextComponent("This is a dun sphere, find a Highstorm to recharge it!"));
         }
         tooltip.add(new StringTextComponent(Integer.toString(this.value)));
@@ -205,8 +214,12 @@ public class SphereItem extends SwordItem {
         return false;
     }
 
+    private int getStormlight(ItemStack stack) {
+        return stack.getMaxDamage() - stack.getDamage();
+    }
+
     @Override
     public boolean hasEffect(ItemStack itemStack) {
-        return itemStack.getDamage() > 1;
+        return getStormlight(itemStack) > 1;
     }
 }
