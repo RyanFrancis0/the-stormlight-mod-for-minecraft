@@ -29,38 +29,13 @@ public class HUD {
                 mc.getProfiler().startSection("stormlightBar");
                 int width = 182;
                 int x = res.getScaledWidth() / 2 - width / 2;
-                int y = res.getScaledHeight() - 232;
-                LazyOptional<IPlayerInfo> blade = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null);
-                IPlayerInfo what = blade.orElse(null);
-                float stormlight = what.getStormlight() / 1000f;
+                int y = res.getScaledHeight() / 20;
+                IPlayerInfo playerInfo = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
+                float stormlight = (playerInfo == null) ?  0 : playerInfo.getStormlight() / 1000f;
                 mc.getTextureManager().bindTexture(stormlight_bar);
                 mc.ingameGUI.blit(x, y, 0, 0, 204, 10);
                 mc.ingameGUI.blit(x + 1, y + 1, 0, 10, (int) (202f * stormlight), 8);
                 mc.getProfiler().endSection();
-                /*
-                if(!hasCreative) {
-                    if(totalMaxMana == 0)
-                        width = 0;
-                    else width *= (double) totalMana / (double) totalMaxMana;
-                }
-
-                if(width == 0) {
-                    if(totalMana > 0)
-                        width = 1;
-                    else return;
-                }
-
-                Color color = new Color(Color.HSBtoRGB(0.55F, (float) Math.min(1F, Math.sin(System.currentTimeMillis() / 200D) * 0.5 + 1F), 1F));
-                GL11.glColor4ub((byte) color.getRed(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) (255 - color.getRed()));
-                mc.renderEngine.bindTexture(manaBar);
-
-                GlStateManager.enableBlend();
-                GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                RenderHelper.drawTexturedModalRect(x, y, 0, 0, 251, width, 5);
-                GlStateManager.disableBlend();
-                GL11.glColor4ub((byte) 255, (byte) 255, (byte) 255, (byte) 255);
-
-                 */
             }
         }
     }

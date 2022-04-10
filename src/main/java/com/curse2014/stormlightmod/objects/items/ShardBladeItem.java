@@ -2,12 +2,14 @@ package com.curse2014.stormlightmod.objects.items;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
@@ -27,20 +29,12 @@ public class ShardBladeItem extends SwordItem {
 
     public ShardBladeItem(IItemTier tier, int attackDamage, float attackSpeed, Properties properties) {
         super(tier, attackDamage, attackSpeed, properties);
-        /* still has a shadow
-        this.addPropertyOverride(new ResourceLocation("invisible"), ((itemStack, world, livingEntity) -> {
-            CompoundNBT compoundnbt = itemStack.getTag();
-            if (compoundnbt == null) {
-                //System.o
-                itemStack.setTag(new CompoundNBT());
-                compoundnbt = itemStack.getTag();
-                compoundnbt.putString("player", "");
-                compoundnbt.putString("name", this.name);
-                compoundnbt.putFloat("invisible", 0.0F);
-            }
-            return 1.0F;// compoundnbt.getFloat("invisible");
-        }));
-         */
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack a, World world, BlockState b, BlockPos bPos, LivingEntity c) {
+        world.removeBlock(bPos, false);
+        return true;
     }
 
     @Override
@@ -50,15 +44,18 @@ public class ShardBladeItem extends SwordItem {
     }
 
     @Override
-    public int getHarvestLevel(ItemStack stack, net.minecraftforge.common.ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
-        return 0;
+    public boolean hitEntity(ItemStack stack, LivingEntity entity, LivingEntity player) {
+        if (entity.getTotalArmorValue() < 4) {
+            entity.setHealth(0);
+        }
+        return true;
     }
 
-    /*@Override
-    public boolean canHarvestBlock(BlockState blockState) {
+    @Override
+    public boolean isDamageable() {
         return false;
     }
-    */
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
@@ -68,18 +65,21 @@ public class ShardBladeItem extends SwordItem {
         if (compoundnbt == null) {
             itemStack.setTag(new CompoundNBT());
             compoundnbt = itemStack.getTag();
-            compoundnbt.putString("player", "");
+            compoundnbt.putString("player", playerIn.getName().getString());
             compoundnbt.putString("name", this.name);
         }
-        if (compoundnbt.getString("player").equals("")) {
+        if (compoundnbt.getString("player").equals("Dev")) {
             compoundnbt.putString("player", playerId);
             playerIn.sendMessage(new StringTextComponent(
                     "You have bonded " + compoundnbt.getString("name"))
             );
-        } else {
+        } else if (!compoundnbt.getString("player").equals(playerIn.getName().getString())) {
             playerIn.sendMessage(new StringTextComponent(
                     "You cannot claim this blade.")
             );
+        } else {
+            playerIn.sendMessage(new StringTextComponent(
+                    "Your name is " + playerIn.getName().getString() + playerIn.getDisplayName()));
         }
         return ActionResult.resultPass(playerIn.getHeldItem(handIn));
     }

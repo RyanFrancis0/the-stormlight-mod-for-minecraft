@@ -1,0 +1,24 @@
+This is the real short term document to help me think
+
+
+
+one place for stormlight effects. should be the player ontick
+
+Fixes:
+- fix breathing underwater (server?)
+    - how to remove potion effects?
+- fix blade bonding
+    - ability to unbond in which case CAN Drop it as an item
+
+Continues:
+- increase reach when holding blade
+
+Nextses:
+- a surge? (windrunner acceleration)
+- spren
+- roshar dimension
+- shattered plains biome (maybe b4 above)
+
+
+
+

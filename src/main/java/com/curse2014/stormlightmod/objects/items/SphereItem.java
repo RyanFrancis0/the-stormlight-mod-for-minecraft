@@ -2,27 +2,14 @@ package com.curse2014.stormlightmod.objects.items;
 
 import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
 import com.curse2014.stormlightmod.capabilities.PlayerInfoProvider;
-import com.curse2014.stormlightmod.effects.StormlightEffect;
-import com.curse2014.stormlightmod.init.BlockInitNew;
 import com.curse2014.stormlightmod.init.EffectInit;
-import com.curse2014.stormlightmod.init.ItemInitNew;
-import com.curse2014.stormlightmod.util.helpers.KeyboardHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -30,38 +17,40 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 //import static com.curse2014.stormlightmod.init.EffectInit.STORMLIGHT_EFFECT;
 
-public class SphereItem extends SwordItem {
-    private int maxStormlight = 4800;//should be some function of sphere type & size, when add diff types and sizes
-    //game is 20 ticks/s so 4800 == 4 minutes;
-    private int drainRate = 20;
-    private float normalDrainRate = 0.001f;
-    private String stormlight = "stormlight";
-    private String inUse = "inUse";
-    private int value;
+public class SphereItem extends Item {
     private int type;
     private int size;
-    public EffectInstance effect = new EffectInstance(EffectInit.stormlight, this.maxStormlight);
-    private Consumer<PlayerEntity> uh = new Consumer<PlayerEntity>() {
-        @Override
-        public void accept(PlayerEntity playerEntity) {
-            playerEntity.sendBreakAnimation(playerEntity.getActiveHand());
-        }
-    };
+    private int value; //monetary, should be func of type and size
+    private int maxStormlight = 4800;//should also be some func of type & size, when add diff types and sizes
+    //game is 20 ticks/second, so 4800 == 4 minutes of stormlight in 1 sphere (whatever this sphere is);
+    private static int normalDrainRate = 1; // sphere's are always slowly going dun
+    private static int usingDrainRate = 20;
+    private static int chargeRate = 100; //how fast should recharge during hightstorm.
+    private static String inUse = "inUse";
+    // public EffectInstance effect = new EffectInstance(EffectInit.stormlight, this.maxStormlight);
+//    private Consumer<PlayerEntity> uh = new Consumer<PlayerEntity>() {
+//        @Override
+//        public void accept(PlayerEntity playerEntity) {
+//            playerEntity.sendBreakAnimation(playerEntity.getActiveHand());
+//        }
+//    };
     private int count = 0;
+    private static int numberOfSpheresInWorld = 0;
 
     //diamond chip
     public SphereItem(Properties properties) {
-        super(ItemTier.WOOD, 0, 0, properties.maxDamage(4800).defaultMaxDamage(4800));
+        super(properties.maxDamage(4800).defaultMaxDamage(4800));
         this.type = 1;
         this.size = 1;
         this.value = 1;
-        //properties.maxStackSize(1);
+        numberOfSpheresInWorld++;
     }
 
     /*public SphereItem(Properties properties, int type, int size, int value) {
@@ -102,82 +91,49 @@ public class SphereItem extends SwordItem {
      */
 
     @Override
-    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
-        CompoundNBT compoundnbt = stack.getTag();
-        if (compoundnbt == null) {
-            stack.setTag(new CompoundNBT());
-            compoundnbt = stack.getTag();
-        }
-        compoundnbt.putBoolean(this.inUse, false);
-    }
-
-    @Override
+    @Nonnull
+    @ParametersAreNonnullByDefault
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
-        CompoundNBT compoundnbt = itemStack.getTag();
-        if (compoundnbt == null) {
-            this.onCreated(itemStack, worldIn, playerIn);
-            compoundnbt = itemStack.getTag();
-        }
-        if (compoundnbt.getBoolean(this.inUse)) {
-            playerIn.removePotionEffect(effect.getPotion());
-            compoundnbt.putBoolean(this.inUse, false);
-        } else if (itemStack.getDamage() > 1) {
-            /*
-            EffectInstance temp = new EffectInstance(
-                    EffectInit.stormlight,
-                    getStormlight(itemStack)
-            );
-            effect.combine(temp);
-            playerIn.addPotionEffect(this.effect);
-             */
-            compoundnbt.putBoolean(this.inUse, true);
-        }
+        CompoundNBT compoundnbt = itemStack.getOrCreateTag();
+        compoundnbt.putBoolean(inUse, !compoundnbt.getBoolean(inUse));
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         count += 1;
-        if (count == 20) {
+        if (count == usingDrainRate) {
             PlayerEntity player = ((PlayerEntity) entityIn);
             IPlayerInfo playerInfo = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null)
                     .orElse(null);
             count = 0;
-            CompoundNBT compoundnbt = stack.getTag();
-            if (compoundnbt == null) {
-                System.out.println("huh");
-                this.onCreated(stack, worldIn, (PlayerEntity) entityIn);
-                compoundnbt = stack.getTag();
+            CompoundNBT compoundnbt = stack.getOrCreateTag();
+            if (!player.isAlive()) {
+                compoundnbt.putBoolean(inUse, false);
             }
-            int usingDrainRate = 20;
-            //System.out.println(stack.getMaxDamage());
-            if (this.getStormlight(stack) <= usingDrainRate) {
-                if (compoundnbt.getBoolean(this.inUse)) {
-                    player.removePotionEffect(this.effect.getPotion());
-                    compoundnbt.putBoolean(this.inUse, false);
-                }
-                stack.setDamage(stack.getMaxDamage() - 1);
-            } else {
-                if (compoundnbt.getBoolean(this.inUse)) {
-                    //stack.damageItem(usingDrainRate, player, (p_220000_1_) ->
-                    //        p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
-                    stack.setDamage(stack.getDamage() + usingDrainRate);
-                    playerInfo.setStormlight(playerInfo.getStormlight() + usingDrainRate);
-                    System.out.println(playerInfo.getStormlight());
+            //System.out.println(this.getStormlight(stack));
+            int newDamage = stack.getDamage();
+            if (compoundnbt.getBoolean(inUse)) {
+                if (this.getStormlight(stack) <= usingDrainRate) {
+                    compoundnbt.putBoolean(inUse, false);
+                    newDamage = stack.getMaxDamage() - 1;//set to 1 stormlight/damag
                 } else {
-                    //stack.damageItem(1, player, (p_220000_1_) ->
-                    //        p_220000_1_.sendBreakAnimation(Hand.OFF_HAND));
-                    stack.setDamage(stack.getDamage() + 1);
+                    newDamage += usingDrainRate;
+                    playerInfo.changeStormlight(usingDrainRate);
+                    //System.out.println(playerInfo.getStormlight());
                 }
+            } else if (hasEffect(stack)) {
+                newDamage += normalDrainRate;
             }
             if (worldIn.isThundering()) {
-                if (100 < stack.getDamage()) {
-                    stack.setDamage(stack.getDamage() - 100);
+                if (chargeRate < stack.getDamage()) {
+                    newDamage -= chargeRate;
                 } else {
-                    stack.setDamage(0);
+                    newDamage = 0;
                 }
             }
+            stack.setDamage(newDamage);
         }
     }
     /*
@@ -202,7 +158,7 @@ public class SphereItem extends SwordItem {
     */
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (getStormlight(stack) == 1) {
+        if (!hasEffect(stack)) {
             tooltip.add(new StringTextComponent("This is a dun sphere, find a Highstorm to recharge it!"));
         }
         tooltip.add(new StringTextComponent(Integer.toString(this.value)));
@@ -213,6 +169,8 @@ public class SphereItem extends SwordItem {
     public boolean canApplyAtEnchantingTable(ItemStack stack, net.minecraft.enchantment.Enchantment enchantment) {
         return false;
     }
+
+
 
     private int getStormlight(ItemStack stack) {
         return stack.getMaxDamage() - stack.getDamage();

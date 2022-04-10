@@ -1,0 +1,91 @@
+So eventually I want the full shebang, fullblown cosmere.
+
+But in the meantime a list helps (as does a focus on SA):
+
+B is a good idea machine!
+Important tenets to remember:
+    1. that the game needs to be fun to play
+        1.1 and QUICKLY
+        - So this is an adaption of cosmere universe, not an implementation.
+    2. needs to be interesting for devs
+        - biggest threat to project is inevitable loss of time and interest
+        - so don't spend a month just figuring out how to implement wind you'll inevitably hate it
+        - find someone to to textures/models as you really hate that stuff and aren't good at design anyway
+    - need to colour in the edges of world to get immersion
+        - e.g. speech banks, animals (lot o spren), structures (architectures), npcs (fashions), biomes (plants)
+    - want it to stay reasonably minecraftian
+        - mining should be NECESSARY every so often
+            - at this stage all I can think of is make it only reasonable way to get spheres (ingredients to make them)
+
+* spren
+    - all 10 main ones spawn reasonably frequently near unbonded players
+        - maybe parrot behaviour just to begin with
+        - the other ones will take FOREVER to do
+    - bond by typing out 3 oathes in succession. (rclk, or feed stormlight? to get spren 'ready')
+    - once bonded gets named by you "I... almost...remember... I had a name once, what was it?"
+    - follows you around
+    - invincible
+    - when you die it dies (forever) and drops as a dead shard blade that any1 but u can pick up.
+        - msg life before death appears on death gui
+    - exponentialy increasing wait time between bonding new spren
+        - challene of letting people try out diff orders. need fiure out appropriate cost
+
+* shardblades
+    - not normally placeable but eventually someway definitely able to place as 2x1 block entity (like armourstand) face down in stone
+
+* chasm fiend
+    - mini boss
+    - drops perfect gemstone as reward
+
+* shattered plains biome
+    - badlands with really ramped up chasms/canyons spawning rate
+    - alethi and parshendi spawn randomly here, as do their structures
+        - althi have 10 skin types, and kholin and sadeas ones sometimes break into fights
+
+* willshaper
+    - heal enitities w/ stormlight
+    - increased speed and can climb walls like spider
+
+* lightweaver
+    - can transform stormlight into stack of light blocks
+        - some way to alter them to desired texture
+        - light blocks not solid
+        - some way to link to gemstone (downtrack)
+    - in an anvil can exchange stormlight to transform stone into bread (and so forth)
+    - sticks do LARGE amount of dmg, maybe sets lightweavers on fire too
+
+* windrunners
+    - can accelerate in pointing direction
+        - minecraft gravity so dang strong, maybe slow falling effect?
+    - can change gravity of a block or an itementity
+        - if not of type plant?
+
+* destroucto ones
+    - can create mini explosion they're not damaged by
+    - increase strength (maybe resistance too?)
+
+* elsecallers
+    - can transform stormlight into temporary portal blocks only you can use
+        - if place 2x1 can walkthrough to shadesmar dimension
+        - very expensive
+        - need portal blocks to get back home, so it is hard to get back
+
+* bondsmiths
+    - can in a radius around them start recharging spheres like highstorm
+        - skybeam on player when they do (thank you minecraft)
+
+* highstorm
+    - once every 2 minecraft days
+    - just starts out as thunder at beginning as wind CRAZY hard to insert into mc
+    - shudder to think about moving it across roshar dimension
+
+* shadesmar dimension
+    - tieing it to overworld layout will take a while to figure out/implement
+        - so to begin with will just generate randomly
+
+* when game getting over/raeched highest power creep
+    - braze dimension
+
+
+
+

@@ -1,5 +1,6 @@
 package com.curse2014.stormlightmod.util.helpers;
 
+import net.minecraftforge.client.event.InputEvent;
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;

@@ -6,7 +6,6 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class PlayerInfoStorage implements Capability.IStorage<IPlayerInfo> {
     @Nullable
@@ -17,6 +16,10 @@ public class PlayerInfoStorage implements Capability.IStorage<IPlayerInfo> {
         //do for each info being stored
         tag.putInt("blade", instance.getBlade());
         tag.putFloat("stormlight", instance.getStormlight());
+        tag.putInt("ideal", instance.getIdeal());
+        tag.putInt("order", instance.getOrder());
+        System.out.println(tag.getFloat("stormlight"));
+        System.out.println(instance.getIdeal());
         return tag;
     }
 
@@ -26,6 +29,12 @@ public class PlayerInfoStorage implements Capability.IStorage<IPlayerInfo> {
         //instance.setVar(tag.getVarType("varName"));
         //do for each info being retrieved
         instance.setBlade(tag.getInt("blade"));
-        instance.setStormlight(tag.getFloat("stormlight"));
+        int ideal = tag.getInt("ideal");
+        while (instance.getIdeal() < ideal) {
+            instance.oathAccepted();
+        }
+        System.out.println(tag.getFloat("stormlight"));
+        instance.changeStormlight(tag.getFloat("stormlight"));
+        ((PlayerInfo) instance).order = tag.getInt("order");
     }
 }

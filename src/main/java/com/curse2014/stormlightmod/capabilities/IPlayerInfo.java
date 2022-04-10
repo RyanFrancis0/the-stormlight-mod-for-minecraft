@@ -8,9 +8,17 @@ public interface IPlayerInfo {
     //get and change info
     public float getStormlight();
 
-    public void setStormlight(float stormlight);
+    public void changeStormlight(float stormlight);
 
     public int getBlade();
 
     public void setBlade(int blade);
+
+    public int getIdeal();
+
+    public void oathAccepted();
+
+    public int getOrder();
+
+    public boolean canDoThing(int thing);
 }

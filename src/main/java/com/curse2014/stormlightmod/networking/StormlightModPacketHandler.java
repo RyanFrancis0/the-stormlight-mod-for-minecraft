@@ -1,6 +1,7 @@
 package com.curse2014.stormlightmod.networking;
 
 import com.curse2014.stormlightmod.StormlightMod;
+import net.minecraft.network.play.server.SEntityMetadataPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -23,6 +24,13 @@ public class StormlightModPacketHandler {
                 ShardbladePacket::new,
                 ShardbladePacket::handle
         );
+//        INSTANCE.registerMessage(
+//                nextID(),
+//                SEntityMetadataPacket.class,
+//                SEntityMetadataPacket::encode,
+//                SEntityMetadataPacket::new,
+//                SEntityMetadataPacket::handle
+//        );
         //in order to do other packets copy above exactly but replace packet class (obviously)
     }
 }
