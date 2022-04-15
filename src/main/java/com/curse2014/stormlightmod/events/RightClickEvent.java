@@ -1,4 +1,4 @@
-package com.curse2014.stormlightmod.util;
+package com.curse2014.stormlightmod.events;
 
 import com.curse2014.stormlightmod.StormlightMod;
 import com.curse2014.stormlightmod.capabilities.IPlayerInfo;

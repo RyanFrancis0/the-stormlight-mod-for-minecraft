@@ -12,21 +12,25 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class onPlayeClone {
-    @SubscribeEvent
-    public static void clone(PlayerEvent.Clone event) {
-        PlayerEntity oldPLayer = event.getOriginal();
-        PlayerEntity newPlayer = event.getPlayer();
-        PlayerTickingEvent.flightPath = null;
-        IPlayerInfo oldCapability = oldPLayer.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
-        IPlayerInfo newCapability = newPlayer.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
-        newCapability.setBlade(oldCapability.getBlade());
-        while (newCapability.getIdeal() < oldCapability.getIdeal()) {
-            newCapability.oathAccepted();
-        }
-        if (!event.isWasDeath()) {
-            newCapability.changeStormlight(oldCapability.getStormlight());
-        }
-        ((PlayerInfo) newCapability).order = oldCapability.getOrder();
+//    @SubscribeEvent
+//    public static void clone(PlayerEvent.Clone event) {
+//        PlayerEntity oldPLayer = event.getOriginal();
+//        PlayerEntity newPlayer = event.getPlayer();
+//        PlayerTickingEvent.flightPath = null;
+//        IPlayerInfo oldCapability = oldPLayer.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
+//        IPlayerInfo newCapability = newPlayer.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
+//        newCapability.setBlade(oldCapability.getBlade());
+//        while (newCapability.getIdeal() < oldCapability.getIdeal()) {
+//            newCapability.oathAccepted();
+//        }
+//        if (!event.isWasDeath()) {
+//            newCapability.changeStormlight(oldCapability.getStormlight());
+//        }
+//        ((PlayerInfo) newCapability).order = oldCapability.getOrder();
+//
+//    }
 
-    }
+//    public static void login(PlayerEvent.PlayerLoggedInEvent event) {
+//        PlayerEntity player = event.getPlayer();
+//    }
 }

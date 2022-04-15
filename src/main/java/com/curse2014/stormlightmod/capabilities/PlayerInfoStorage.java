@@ -15,11 +15,11 @@ public class PlayerInfoStorage implements Capability.IStorage<IPlayerInfo> {
         //tag.putVarType("varName", instance.getVar());
         //do for each info being stored
         tag.putInt("blade", instance.getBlade());
-        tag.putFloat("stormlight", instance.getStormlight());
         tag.putInt("ideal", instance.getIdeal());
         tag.putInt("order", instance.getOrder());
-        System.out.println(tag.getFloat("stormlight"));
-        System.out.println(instance.getIdeal());
+        tag.putFloat("stormlight", instance.getStormlight());
+        //System.out.println(tag.getFloat("stormlight"));
+        //System.out.println(instance.getIdeal());
         return tag;
     }
 
@@ -28,13 +28,14 @@ public class PlayerInfoStorage implements Capability.IStorage<IPlayerInfo> {
         CompoundNBT tag = (CompoundNBT) nbt;
         //instance.setVar(tag.getVarType("varName"));
         //do for each info being retrieved
+        //!!! Must read out same order put in
         instance.setBlade(tag.getInt("blade"));
         int ideal = tag.getInt("ideal");
         while (instance.getIdeal() < ideal) {
             instance.oathAccepted();
         }
-        System.out.println(tag.getFloat("stormlight"));
-        instance.changeStormlight(tag.getFloat("stormlight"));
-        ((PlayerInfo) instance).order = tag.getInt("order");
+        instance.setOrder(tag.getInt("order"));
+        instance.setStormlight(tag.getFloat("stormlight"));
+        //System.out.println(instance.getStormlight());
     }
 }

@@ -2,6 +2,7 @@ package com.curse2014.stormlightmod.capabilities;
 
 import com.curse2014.stormlightmod.objects.items.ShardBladeItem;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.INBT;
 import net.minecraft.world.storage.loot.RandomValueRange;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class PlayerInfo implements IPlayerInfo {
     private int ideal = 4; //1==1st surge && stormlight 2==blade 3==2nd surge, 4==plate, change to 0 post oath making
     private Random rand = new Random();
     public int order = 0;// rand.nextInt();//list orders
+    public int maxStormlight = 1000;
 
     @Override
     public float getStormlight() {
@@ -23,12 +25,17 @@ public class PlayerInfo implements IPlayerInfo {
 
     @Override
     public void changeStormlight(float stormlight) {
+        this.setStormlight(this.getStormlight() + stormlight);
+    }
+
+    @Override
+    public void setStormlight(float stormlight) {
         if (this.getIdeal() > 0) {
-            this.stormlight += stormlight;
+            this.stormlight = stormlight;
             if (this.stormlight < 0) {
                 this.stormlight = 0;
-            } else if (this.stormlight > 1000) {
-                this.stormlight = 1000;
+            } else if (this.stormlight > this.maxStormlight) {
+                this.stormlight = this.maxStormlight;
             }
         }
     }
@@ -67,6 +74,11 @@ public class PlayerInfo implements IPlayerInfo {
     }
 
     @Override
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    @Override
     public boolean canDoThing(int thing) {
         if (thing == 0) {
             if (blade != -1) {
@@ -82,6 +94,14 @@ public class PlayerInfo implements IPlayerInfo {
             //can summon plate
         }
         return true;//change to false
+    }
+
+    public INBT convertToNBT() {
+        return PlayerInfoProvider.PLAYER_INFO.getStorage().writeNBT(PlayerInfoProvider.PLAYER_INFO, this, null);
+    }
+
+    public void setValuesFromNBT(INBT nbt) {
+        PlayerInfoProvider.PLAYER_INFO.getStorage().readNBT(PlayerInfoProvider.PLAYER_INFO, this, null, nbt);
     }
 
     public static IPlayerInfo getFromPlayer(PlayerEntity player){

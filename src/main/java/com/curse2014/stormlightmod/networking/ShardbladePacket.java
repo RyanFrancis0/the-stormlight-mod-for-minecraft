@@ -1,5 +1,7 @@
 package com.curse2014.stormlightmod.networking;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -33,6 +35,7 @@ public class ShardbladePacket {
                 //do stuff area
                 ServerPlayerEntity player = context.get().getSender().world.getServer().getPlayerList()
                         .getPlayerByUUID(playerID);
+                //PlayerEntity b = Minecraft.getInstance().player;/this actually workds
                 player.addItemStackToInventory(stack);
             });
             context.get().setPacketHandled(true);

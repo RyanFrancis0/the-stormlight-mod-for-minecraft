@@ -1,6 +1,7 @@
 package com.curse2014.stormlightmod.objects.items;
 
 import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
+import com.curse2014.stormlightmod.capabilities.PlayerInfo;
 import com.curse2014.stormlightmod.capabilities.PlayerInfoProvider;
 import com.curse2014.stormlightmod.init.EffectInit;
 import mcp.MethodsReturnNonnullByDefault;
@@ -100,41 +101,55 @@ public class SphereItem extends Item {
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
+    /**
+     * Ah stormlight calculations
+     * @param stack
+     * @param worldIn
+     * @param entityIn
+     * @param itemSlot
+     * @param isSelected
+     */
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        count += 1;
-        if (count == usingDrainRate) {
-            PlayerEntity player = ((PlayerEntity) entityIn);
-            IPlayerInfo playerInfo = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null)
-                    .orElse(null);
-            count = 0;
-            CompoundNBT compoundnbt = stack.getOrCreateTag();
-            if (!player.isAlive()) {
-                compoundnbt.putBoolean(inUse, false);
-            }
-            //System.out.println(this.getStormlight(stack));
-            int newDamage = stack.getDamage();
-            if (compoundnbt.getBoolean(inUse)) {
-                if (this.getStormlight(stack) <= usingDrainRate) {
-                    compoundnbt.putBoolean(inUse, false);
-                    newDamage = stack.getMaxDamage() - 1;//set to 1 stormlight/damag
-                } else {
-                    newDamage += usingDrainRate;
-                    playerInfo.changeStormlight(usingDrainRate);
-                    //System.out.println(playerInfo.getStormlight());
-                }
-            } else if (hasEffect(stack)) {
-                newDamage += normalDrainRate;
-            }
-            if (worldIn.isThundering()) {
-                if (chargeRate < stack.getDamage()) {
-                    newDamage -= chargeRate;
-                } else {
-                    newDamage = 0;
-                }
-            }
-            stack.setDamage(newDamage);
+        CompoundNBT compoundnbt = stack.getOrCreateTag();
+        boolean isInUse;
+        if (!compoundnbt.contains(inUse)) {
+            isInUse = false;
+            compoundnbt.putBoolean(inUse, isInUse);
+        } else {
+            isInUse = compoundnbt.getBoolean(inUse);
         }
+        int newDamage = stack.getDamage();
+        if (entityIn instanceof PlayerEntity) {
+            PlayerEntity player = ((PlayerEntity) entityIn);
+            if (isInUse) {
+                if (!player.isAlive()) {
+                    compoundnbt.putBoolean(inUse, false);
+                } else if (this.getStormlight(stack) > usingDrainRate) {
+                    IPlayerInfo playerInfo = PlayerInfo.getFromPlayer(player);
+                    playerInfo.changeStormlight(usingDrainRate);
+                    if (worldIn.isRemote()) {
+                        System.out.println("Client Sphere thinks player stormlight is:" + playerInfo.getStormlight());
+                    } else {
+                        System.out.println("Server Sphere thinks player stormlight is:" + playerInfo.getStormlight());
+                    }
+                    newDamage += (usingDrainRate - normalDrainRate);
+                }
+            }
+        } else if (isInUse) {
+            compoundnbt.putBoolean(inUse, false);
+        }
+        if (hasEffect(stack)) {
+            newDamage += normalDrainRate;
+        }
+        if (worldIn.isThundering()) {
+            if (chargeRate < stack.getDamage()) {
+                newDamage -= chargeRate;
+            } else {
+                newDamage = 0;
+            }
+        }
+        stack.setDamage(newDamage);
     }
     /*
     @Override

@@ -31,6 +31,7 @@ public class HUD {
                 int x = res.getScaledWidth() / 2 - width / 2;
                 int y = res.getScaledHeight() / 20;
                 IPlayerInfo playerInfo = player.getCapability(PlayerInfoProvider.PLAYER_INFO, null).orElse(null);
+                //System.out.println("Client HUDti thinks player stormlight is:" + playerInfo.getStormlight());
                 float stormlight = (playerInfo == null) ?  0 : playerInfo.getStormlight() / 1000f;
                 mc.getTextureManager().bindTexture(stormlight_bar);
                 mc.ingameGUI.blit(x, y, 0, 0, 204, 10);

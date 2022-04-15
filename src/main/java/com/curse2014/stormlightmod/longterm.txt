@@ -11,6 +11,11 @@ Important tenets to remember:
         - biggest threat to project is inevitable loss of time and interest
         - so don't spend a month just figuring out how to implement wind you'll inevitably hate it
         - find someone to to textures/models as you really hate that stuff and aren't good at design anyway
+        - get public server going
+        ! get community behind this to keep me honest
+            - fb
+        - find someone to do a wiki, you hate that too
+            - ugh but you kind of have to be involved. nah i dont, someonell figure it out.
     - need to colour in the edges of world to get immersion
         - e.g. speech banks, animals (lot o spren), structures (architectures), npcs (fashions), biomes (plants)
     - want it to stay reasonably minecraftian
@@ -32,6 +37,19 @@ Important tenets to remember:
 
 * shardblades
     - not normally placeable but eventually someway definitely able to place as 2x1 block entity (like armourstand) face down in stone
+    - cannot drop, be placed in item frame, or placed in a non player inventory.
+    - Maybe make shardblade slower than normal sword?
+    - always drop on player death
+    - if not radiant:
+        - if do held rclc like food should 'unbond' and drop.
+
+
+* shardplate
+    - jumping boost
+        - pants and boots?
+    - maximum possible armour value
+    - resistance effect, all armour on
+    - if is 'live' some way to toggle visibility? would become visible on someone attcking the player. long way down track.
 
 * chasm fiend
     - mini boss
