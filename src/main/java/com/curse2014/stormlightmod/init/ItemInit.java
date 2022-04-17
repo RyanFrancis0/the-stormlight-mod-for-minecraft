@@ -3,10 +3,8 @@ package com.curse2014.stormlightmod.init;
 import java.util.function.Supplier;
 
 import com.curse2014.stormlightmod.StormlightMod;
-import com.curse2014.stormlightmod.objects.items.ShardBladeItem;
-import com.curse2014.stormlightmod.objects.items.SpecialItem;
+import com.curse2014.stormlightmod.objects.items.*;
 
-import com.curse2014.stormlightmod.objects.items.SphereItem;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -21,6 +19,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 @Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Bus.MOD)
@@ -34,7 +33,7 @@ public class ItemInit {
 			ItemTier.DIAMOND,
 			20,
 			6,
-			new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)
+			new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
 	);
 
 	// Tools
@@ -50,48 +49,87 @@ public class ItemInit {
 	public static final Item test_leggings = null;
 	public static final Item test_boots = null;
 
+	/**
+	 * remember each item needs its own instance of item properties
+	 * @param event
+	 */
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
-		event.getRegistry()
-				.register(new Item(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)/*.group(ItemGroup.MISC)*/).setRegistryName("example_item"));
-		event.getRegistry()
-				.register(new Item(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)
+		IForgeRegistry<Item> reg = event.getRegistry();
+		reg.register(
+				new Item(new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
+				).setRegistryName("example_item"));
+		reg.register(
+				new Item(new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
 						.food(new Food.Builder().hunger(6).saturation(1.2f)
-								.effect(new EffectInstance(Effects.ABSORPTION, 6000, 5), 0.7f).build()))
-										.setRegistryName("test_item"));
-		event.getRegistry().register(new SpecialItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
-				.setRegistryName("special_item"));
+								.effect(new EffectInstance(Effects.ABSORPTION, 6000, 5), 0.7f).build())
+						).setRegistryName("test_item")
+		);
+		reg.register(
+				new SpecialItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
+				.setRegistryName("special_item")
+		);
 
-		event.getRegistry().register(new SphereItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
-				.setRegistryName("sphere_item"));
-		event.getRegistry().register(shardblade_item.setRegistryName("shard_blade_item"));
+		reg.register(new SphereItem(
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic),
+				SphereItem.POLESTONE.EMERALD,
+				SphereItem.DENOMINATION.BROAM
+		).setRegistryName("polestones/emerald_broam"));
+		reg.register(new SphereItem(
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic),
+				SphereItem.POLESTONE.EMERALD,
+				SphereItem.DENOMINATION.MARK
+		).setRegistryName("polestones/emerald_mark"));
+		reg.register(new SphereItem(
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic),
+				SphereItem.POLESTONE.EMERALD,
+				SphereItem.DENOMINATION.CHIP
+		).setRegistryName("polestones/emerald_chip"));
+		reg.register(new SphereItem(
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic),
+				SphereItem.POLESTONE.DIAMOND,
+				SphereItem.DENOMINATION.BROAM
+		).setRegistryName("polestones/diamond_broam"));
+		reg.register(new SphereItem(
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic),
+				SphereItem.POLESTONE.DIAMOND,
+				SphereItem.DENOMINATION.MARK
+		).setRegistryName("polestones/diamond_mark"));
+		reg.register(new SphereItem(
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic),
+				SphereItem.POLESTONE.DIAMOND,
+				SphereItem.DENOMINATION.CHIP
+		).setRegistryName("polestones/diamond_chip"));
+
+
+		reg.register(shardblade_item.setRegistryName("shard_blade_item"));
 
 		// Tools
-		event.getRegistry().register(
-				new SwordItem(ModItemTier.EXAMPLE, 7, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+		reg.register(
+				new SwordItem(ModItemTier.EXAMPLE, 7, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
 						.setRegistryName("example_sword"));
-		event.getRegistry().register(
-				new PickaxeItem(ModItemTier.EXAMPLE, 4, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+		reg.register(
+				new PickaxeItem(ModItemTier.EXAMPLE, 4, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
 						.setRegistryName("example_pickaxe"));
-		event.getRegistry().register(
-				new ShovelItem(ModItemTier.EXAMPLE, 2, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+		reg.register(
+				new ShovelItem(ModItemTier.EXAMPLE, 2, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
 						.setRegistryName("example_shovel"));
-		event.getRegistry().register(
-				new AxeItem(ModItemTier.EXAMPLE, 11, 3.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+		reg.register(
+				new AxeItem(ModItemTier.EXAMPLE, 11, 3.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
 						.setRegistryName("example_axe"));
-		event.getRegistry().register(
-				new HoeItem(ModItemTier.EXAMPLE, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+		reg.register(
+				new HoeItem(ModItemTier.EXAMPLE, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
 						.setRegistryName("example_hoe"));
 
 		// Armor
-		event.getRegistry().register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.HEAD,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)).setRegistryName("test_helmet"));
-		event.getRegistry().register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.CHEST,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)).setRegistryName("test_chestplate"));
-		event.getRegistry().register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.LEGS,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)).setRegistryName("test_leggings"));
-		event.getRegistry().register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.FEET,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)).setRegistryName("test_boots"));
+		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.HEAD,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_helmet"));
+		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.CHEST,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_chestplate"));
+		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.LEGS,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_leggings"));
+		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.FEET,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_boots"));
 	}
 
 	public enum ModItemTier implements IItemTier {
@@ -108,7 +146,7 @@ public class ItemInit {
 		private final int enchantability;
 		private final LazyValue<Ingredient> repairMaterial;
 
-		private ModItemTier(int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantability,
+		ModItemTier(int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantability,
 				Supplier<Ingredient> repairMaterial) {
 			this.harvestLevel = harvestLevel;
 			this.maxUses = maxUses;
@@ -163,7 +201,7 @@ public class ItemInit {
 		private final float toughness;
 		private final LazyValue<Ingredient> repairMaterial;
 
-		private ModArmorMaterial(String nameIn, int maxDamageFactorIn, int[] damageReductionAmountIn,
+		ModArmorMaterial(String nameIn, int maxDamageFactorIn, int[] damageReductionAmountIn,
 				int enchantabilityIn, SoundEvent soundEventIn, float toughnessIn,
 				Supplier<Ingredient> repairMaterialIn) {
 			this.name = nameIn;

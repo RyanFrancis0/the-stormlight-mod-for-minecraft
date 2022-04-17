@@ -11,8 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.curse2014.stormlightmod.objects.blocks.ModCropBlock;
 //import com.turtywurty.tutorialmod.world.worldtype.ExampleWorldType;
@@ -41,7 +39,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 @Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Bus.MOD)//, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class StormlightMod {
 
-	public static final Logger LOGGER = LogManager.getLogger();
 	public static final String MOD_ID = "stormlightmod";
 	public static StormlightMod instance;
 	// public static final WorldType EXAMPLE_WORLDTYPE = new ExampleWorldType();
@@ -75,13 +72,11 @@ public class StormlightMod {
 
 		BlockInitNew.BLOCKS.getEntries().stream().filter(block -> !(block.get() instanceof ModCropBlock))
 				.map(RegistryObject::get).forEach(block -> {
-					final Item.Properties properties = new Item.Properties().group(StormlightItemGroup.instance);
+					final Item.Properties properties = new Item.Properties().group(StormlightItemGroup.Basic);
 					final BlockItem blockItem = new BlockItem(block, properties);
 					blockItem.setRegistryName(block.getRegistryName());
 					registry.register(blockItem);
 				});
-
-		LOGGER.debug("Registered BlockItems!");
 	}
 
 	@SubscribeEvent
@@ -124,15 +119,28 @@ public class StormlightMod {
 	}
 
 	public static class StormlightItemGroup extends ItemGroup {
-		public static final ItemGroup instance = new StormlightItemGroup(ItemGroup.GROUPS.length, "stormlighttab");
-
 		private StormlightItemGroup(int index, String label) {
 			super(index, label);
 		}
 
+		/**
+		 * TODO: More item groups, for blocks and weapons and whatnot
+		 */
+		public static final ItemGroup Basic = new StormlightItemGroup(ItemGroup.GROUPS.length, "stormlighttab") {
+			@Override
+			public ItemStack createIcon() {
+				return new ItemStack(ItemInit.shardblade_item);
+			}
+		};
+
+
+		/**
+		 * Return tab icon
+		 * @return
+		 */
 		@Override
 		public ItemStack createIcon() {
-			return new ItemStack(BlockInit.example_block);
+			return new ItemStack(ItemInit.shardblade_item);
 		}
 	}
 }

@@ -23,6 +23,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(StormlightMod.MOD_ID)
@@ -34,32 +35,39 @@ public class BlockInit {
 
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		event.getRegistry()
-				.register(new Block(
-						Block.Properties.create(Material.IRON).hardnessAndResistance(0.5f, 15.0f).sound(SoundType.SAND))
-								.setRegistryName("example_block"));
-		event.getRegistry()
-				.register(new SpecalBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(2.0f, 10.0f)
+		IForgeRegistry<Block> reg = event.getRegistry();
+		reg.register(
+				new Block(
+						Block.Properties.create(Material.IRON).hardnessAndResistance(0.5f, 15.0f)
+								.sound(SoundType.SAND)
+				).setRegistryName("example_block")
+		);
+		reg.register(
+				new SpecalBlock(
+						Block.Properties.create(Material.IRON).hardnessAndResistance(2.0f, 10.0f)
 						.harvestLevel(2).harvestTool(ToolType.PICKAXE).sound(SoundType.GLASS).lightValue(4)
-						.slipperiness(1.2f).speedFactor(0.7f).noDrops()).setRegistryName("specal_block"));
-		event.getRegistry()
-				.register(new ModCropBlock(Block.Properties.create(Material.ORGANIC), ItemInit.special_item, 5)
-						.setRegistryName("test_crop"));
+						.slipperiness(1.2f).speedFactor(0.7f).noDrops()
+				).setRegistryName("specal_block")
+		);
+		reg.register(
+				new ModCropBlock(Block.Properties.create(Material.ORGANIC), ItemInit.special_item, 5)
+						.setRegistryName("test_crop")
+		);
 		// event.getRegistry().register(new
 		// BlockTest(Block.Properties.create(Material.WOOD).hardnessAndResistance(1.5f,
 		// 18.0f).sound(SoundType.WOOD).harvestLevel(1).harvestTool(ToolType.AXE)));
-		event.getRegistry().register(new BlockQuarry(Block.Properties.create(Material.IRON)).setRegistryName("quarry"));
+		reg.register(new BlockQuarry(Block.Properties.create(Material.IRON)).setRegistryName("quarry"));
 	}
 
 	@SubscribeEvent
 	public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(
-				new BlockItem(example_block, new Item.Properties().maxStackSize(16).group(StormlightMod.StormlightItemGroup.instance))
+		IForgeRegistry<Item> reg = event.getRegistry();
+		reg.register(
+				new BlockItem(example_block, new Item.Properties().maxStackSize(16).group(StormlightMod.StormlightItemGroup.Basic))
 						.setRegistryName("example_block"));
-		event.getRegistry()
-				.register(new BlockItem(specal_block, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
-						.setRegistryName("specal_block"));
-		event.getRegistry().register(new BlockItem(quarry, new Item.Properties().group(StormlightMod.StormlightItemGroup.instance))
+		reg.register(new BlockItem(specal_block, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
+				.setRegistryName("specal_block"));
+		reg.register(new BlockItem(quarry, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
 				.setRegistryName("quarry"));
 		// event.getRegistry().register(new BlockItem(test_block, new
 		// Item.Properties().group(TutorialItemGroup.instance)).setRegistryName("test_block"));

@@ -27,13 +27,19 @@ public class ExampleBiomeSurfaceBuilder extends SurfaceBuilder<SurfaceBuilderCon
 		int i = rd.nextInt(3);
 		if (i == 0)
 			SurfaceBuilder.DEFAULT.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock,
-					defaultFluid, seaLevel, seed, new SurfaceBuilderConfig(BlockInit.example_block.getDefaultState(),
-							BlockInitNew.DEF_BLOCK.get().getDefaultState(), Blocks.ACACIA_PLANKS.getDefaultState()));
+					defaultFluid, seaLevel, seed,
+					new SurfaceBuilderConfig(
+							BlockInit.example_block.getDefaultState(),
+							BlockInitNew.DEF_BLOCK.get().getDefaultState(), Blocks.ACACIA_PLANKS.getDefaultState()
+					)
+			);
 		else
 			SurfaceBuilder.DEFAULT.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock,
 					defaultFluid, seaLevel, seed,
 					new SurfaceBuilderConfig(
 							i == 1 ? Blocks.GRASS_BLOCK.getDefaultState() : BlockInit.example_block.getDefaultState(),
-							BlockInitNew.DEF_BLOCK.get().getDefaultState(), Blocks.ACACIA_PLANKS.getDefaultState()));
+							BlockInitNew.DEF_BLOCK.get().getDefaultState(), Blocks.ACACIA_PLANKS.getDefaultState()
+					)
+			);
 	}
 }

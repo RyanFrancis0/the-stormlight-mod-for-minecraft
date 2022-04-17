@@ -2,17 +2,12 @@ package com.curse2014.stormlightmod.objects.items;
 
 import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
 import com.curse2014.stormlightmod.capabilities.PlayerInfo;
-import com.curse2014.stormlightmod.capabilities.PlayerInfoProvider;
-import com.curse2014.stormlightmod.init.EffectInit;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -21,75 +16,187 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.function.Consumer;
 
-//import static com.curse2014.stormlightmod.init.EffectInit.STORMLIGHT_EFFECT;
-
-public class SphereItem extends Item {
-    private int type;
-    private int size;
-    private int value; //monetary, should be func of type and size
-    private int maxStormlight = 4800;//should also be some func of type & size, when add diff types and sizes
-    //game is 20 ticks/second, so 4800 == 4 minutes of stormlight in 1 sphere (whatever this sphere is);
-    private static int normalDrainRate = 1; // sphere's are always slowly going dun
-    private static int usingDrainRate = 20;
-    private static int chargeRate = 100; //how fast should recharge during hightstorm.
-    private static String inUse = "inUse";
-    // public EffectInstance effect = new EffectInstance(EffectInit.stormlight, this.maxStormlight);
-//    private Consumer<PlayerEntity> uh = new Consumer<PlayerEntity>() {
-//        @Override
-//        public void accept(PlayerEntity playerEntity) {
-//            playerEntity.sendBreakAnimation(playerEntity.getActiveHand());
-//        }
-//    };
-    private int count = 0;
-    private static int numberOfSpheresInWorld = 0;
-
-    //diamond chip
-    public SphereItem(Properties properties) {
-        super(properties.maxDamage(4800).defaultMaxDamage(4800));
-        this.type = 1;
-        this.size = 1;
-        this.value = 1;
-        numberOfSpheresInWorld++;
-    }
-
-    /*public SphereItem(Properties properties, int type, int size, int value) {
-        super(properties);
-        this.type = type;
-        this.size = size;
-        this.value = value;
-        //could do this but have to register other values anyway
-        switch (type) {
-            case 1:
-                switch (size) {
-                    case 1:
-                        this.value = 1;
-                        break;
-                    case 2:
-                        this.value = 5;
-                    case 3:
-                        this.value = 20;
+class SphereConstants {
+    private static int seconds = 20;
+    private static int minutes = 60 * seconds;
+    /**
+     * All about how long stormlight will last AND cost of surgebinding AND rarity of these stones.
+     * Huh gonna be real tricky to calibrate.
+     * Cos want players to value mining
+     * @param polestone
+     * @param denomination
+     * @return
+     */
+    protected static int getMaxStormlight(SphereItem.POLESTONE polestone, SphereItem.DENOMINATION denomination) {
+        int max = 0;
+        switch (polestone) {
+            case DIAMOND:
+                switch (denomination) {
+                    case CHIP:
+                        max = 3 * seconds;
+                    case MARK:
+                        max = 10 * seconds;
+                    case BROAM:
+                        max = minutes;
+                }
+            case GARNET:
+            case HELIODOR:
+            case TOPAZ:
+                switch (denomination) {
+                    case CHIP:
+                        max = 10 * seconds;
+                    case MARK:
+                        max = minutes;
+                    case BROAM:
+                        max = 3 * minutes;
+                }
+            case RUBY:
+            case SMOKESTONE:
+            case ZIRCON:
+                switch (denomination) {
+                    case CHIP:
+                        max = 30 * seconds;
+                    case MARK:
+                        max = 2 * minutes;
+                    case BROAM:
+                        max = 6 * minutes;
+                }
+            case AMETHYST:
+            case SAPPHIRE:
+                switch (denomination) {
+                    case CHIP:
+                        max = minutes;
+                    case MARK:
+                        max = 5 * minutes;
+                    case BROAM:
+                        max = 10 * minutes;
+                }
+            case EMERALD:
+                switch (denomination) {
+                    case CHIP:
+                        max = 2 * minutes;
+                    case MARK:
+                        max = 8 * minutes;
+                    case BROAM:
+                        max = 20 * minutes;
                 }
         }
-
-    }*/
-
-    /*
-    @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        PlayerEntity player = context.getPlayer();
-        if (!world.isRemote) {
-            if (player != null) {
-                context.getItem().damageItem(1, player, (p_220043_1_) -> {
-                    p_220043_1_.sendBreakAnimation(context.getHand());
-                });
-            }
-        }
-        return ActionResultType.SUCCESS;
+        return max * PlayerInfo.CHARGE_RATE;
     }
-     */
+
+    protected static int getNormalDrainRate(SphereItem.POLESTONE polestone, SphereItem.DENOMINATION denomination) {
+        return seconds;
+    }
+
+    protected static int getMaxSoulcastUses(SphereItem.DENOMINATION denomination) {
+        switch (denomination) {
+            case CHIP:
+                return 5;
+            case MARK:
+                return 10;
+            case BROAM:
+                return 15;
+        }
+        return 0;
+    }
+
+    protected static int getMonetaryValue(SphereItem.POLESTONE polestone, SphereItem.DENOMINATION denomination) {
+        switch (polestone) {
+            case DIAMOND:
+                switch (denomination) {
+                    case CHIP:
+                        return 1;
+                    case MARK:
+                        return 5;
+                    case BROAM:
+                        return 20;
+                }
+            case GARNET:
+            case HELIODOR:
+            case TOPAZ:
+                switch (denomination) {
+                    case CHIP:
+                        return 5;
+                    case MARK:
+                        return 20;
+                    case BROAM:
+                        return 100;
+                }
+            case RUBY:
+            case SMOKESTONE:
+            case ZIRCON:
+                switch (denomination) {
+                    case CHIP:
+                        return 10;
+                    case MARK:
+                        return 50;
+                    case BROAM:
+                        return 200;
+                }
+            case AMETHYST:
+            case SAPPHIRE:
+                switch (denomination) {
+                    case CHIP:
+                        return 25;
+                    case MARK:
+                        return 125;
+                    case BROAM:
+                        return 500;
+                }
+            case EMERALD:
+                switch (denomination) {
+                    case CHIP:
+                        return 50;
+                    case MARK:
+                        return 250;
+                    case BROAM:
+                        return 1000;
+                }
+        }
+        return -1;
+    }
+}
+
+public class SphereItem extends Item {
+    public enum POLESTONE {
+        DIAMOND,
+        GARNET,
+        HELIODOR,
+        TOPAZ,
+        RUBY,
+        SMOKESTONE,
+        ZIRCON,
+        AMETHYST,
+        SAPPHIRE,
+        EMERALD
+    }
+
+    public enum DENOMINATION {
+        CHIP,
+        MARK,
+        BROAM
+    }
+
+    public static int CHARGE_RATE = 1000; //how fast should sphere recharge during hightstorm/perpendicularity.
+    private final String IN_USE = "inUse";
+    private final String TICK = "tick";
+    private final String CRACKS = "cracks";
+    public static int soulcast_uses = 5;
+    public POLESTONE polestone;
+    public DENOMINATION denomination;
+    private int normalDrainRate; // sphere's are always slowly going dun
+    private int soulcastUses;
+    private int monetaryValue;
+
+    public SphereItem(Properties properties, POLESTONE polestone, DENOMINATION denomination) {
+        super(properties.maxDamage(SphereConstants.getMaxStormlight(polestone, denomination)).defaultMaxDamage(SphereConstants.getMaxStormlight(polestone, denomination)));
+        this.polestone = polestone;
+        this.denomination = denomination;
+        this.normalDrainRate = SphereConstants.getNormalDrainRate(polestone, denomination);
+        this.soulcastUses = SphereConstants.getMaxSoulcastUses(denomination);
+        this.monetaryValue = SphereConstants.getMonetaryValue(polestone, denomination);
+    }
 
     @Override
     @Nonnull
@@ -97,7 +204,7 @@ public class SphereItem extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         CompoundNBT compoundnbt = itemStack.getOrCreateTag();
-        compoundnbt.putBoolean(inUse, !compoundnbt.getBoolean(inUse));
+        compoundnbt.putBoolean(IN_USE, !compoundnbt.contains(IN_USE) || !compoundnbt.getBoolean(IN_USE));
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
@@ -112,71 +219,59 @@ public class SphereItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         CompoundNBT compoundnbt = stack.getOrCreateTag();
+        if (!compoundnbt.contains(TICK)) {
+            compoundnbt.putInt(TICK, 0);
+            return;
+        }
+        int tick = compoundnbt.getInt(TICK) + 1;
+        compoundnbt.putInt(TICK, tick);
+        if (tick % this.normalDrainRate != 0) {
+            return;
+        }
         boolean isInUse;
-        if (!compoundnbt.contains(inUse)) {
+        if (!compoundnbt.contains(IN_USE)) {
             isInUse = false;
-            compoundnbt.putBoolean(inUse, isInUse);
+            compoundnbt.putBoolean(IN_USE, isInUse);
         } else {
-            isInUse = compoundnbt.getBoolean(inUse);
+            isInUse = compoundnbt.getBoolean(IN_USE);
         }
         int newDamage = stack.getDamage();
         if (entityIn instanceof PlayerEntity) {
             PlayerEntity player = ((PlayerEntity) entityIn);
             if (isInUse) {
                 if (!player.isAlive()) {
-                    compoundnbt.putBoolean(inUse, false);
-                } else if (this.getStormlight(stack) > usingDrainRate) {
+                    compoundnbt.putBoolean(IN_USE, false);
+                } else if (this.hasEffect(stack)) {
                     IPlayerInfo playerInfo = PlayerInfo.getFromPlayer(player);
-                    playerInfo.changeStormlight(usingDrainRate);
-                    if (worldIn.isRemote()) {
-                        System.out.println("Client Sphere thinks player stormlight is:" + playerInfo.getStormlight());
-                    } else {
-                        System.out.println("Server Sphere thinks player stormlight is:" + playerInfo.getStormlight());
-                    }
-                    newDamage += (usingDrainRate - normalDrainRate);
+                    float playerStormlight = playerInfo.getStormlight();
+                    float amountToAddToPlayer = (playerStormlight + PlayerInfo.CHARGE_RATE > PlayerInfo.MAX_STORMLIGHT) ? PlayerInfo.MAX_STORMLIGHT - playerStormlight : PlayerInfo.CHARGE_RATE;
+                    playerInfo.changeStormlight(amountToAddToPlayer);
+                    newDamage += (amountToAddToPlayer - normalDrainRate);
                 }
             }
         } else if (isInUse) {
-            compoundnbt.putBoolean(inUse, false);
+            compoundnbt.putBoolean(IN_USE, false);
         }
         if (hasEffect(stack)) {
             newDamage += normalDrainRate;
         }
         if (worldIn.isThundering()) {
-            if (chargeRate < stack.getDamage()) {
-                newDamage -= chargeRate;
+            if (CHARGE_RATE < stack.getDamage()) {
+                newDamage -= CHARGE_RATE;
             } else {
                 newDamage = 0;
             }
         }
         stack.setDamage(newDamage);
     }
-    /*
-    @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        if (context.getWorld().getBlockState(context.getPos()).getBlock() == BlockInitNew.DEF_BLOCK.get()) {
-            for (ItemStack stack : context.getPlayer().inventory.mainInventory) {
-                if (stack.isEmpty()) {
-                    context.getPlayer().addItemStackToInventory(new ItemStack(ItemInitNew.DEF_ITEM.get()));
-                    context.getItem().damageItem(1, context.getPlayer(), (playerIn) -> {
-                        playerIn.sendBreakAnimation(context.getHand());
-                    });
-                    return ActionResultType.SUCCESS;
-                }
-            }
-            context.getWorld().addEntity(new ItemEntity(context.getWorld(), context.getPos().getX(),
-                    context.getPos().getY(), context.getPos().getZ(), new ItemStack(ItemInitNew.DEF_ITEM.get())));
-            return ActionResultType.SUCCESS;
-        }
-        return ActionResultType.FAIL;
-    }
-    */
+
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!hasEffect(stack)) {
             tooltip.add(new StringTextComponent("This is a dun sphere, find a Highstorm to recharge it!"));
         }
-        tooltip.add(new StringTextComponent(Integer.toString(this.value)));
+        tooltip.add(new StringTextComponent("Can be used " + this.soulcastUses + " more times for soulcasting"));
+        tooltip.add(new StringTextComponent("Worth " + this.monetaryValue + " Diamond Chips"));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
@@ -184,8 +279,6 @@ public class SphereItem extends Item {
     public boolean canApplyAtEnchantingTable(ItemStack stack, net.minecraft.enchantment.Enchantment enchantment) {
         return false;
     }
-
-
 
     private int getStormlight(ItemStack stack) {
         return stack.getMaxDamage() - stack.getDamage();

@@ -14,7 +14,6 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-//for other packets copy exactly but change vars and do stuff area below
 public class PlayerCapabilityPacket {
         private UUID playerID;
         private CompoundNBT capabilityNBT;
@@ -34,12 +33,13 @@ public class PlayerCapabilityPacket {
             buf.writeCompoundTag(this.capabilityNBT);
         }
 
-        public void handle(Supplier<NetworkEvent.Context> context) {
-            NetworkDirection a = context.get().getDirection();
+    /**
+     * TODO: This is vulnerable to player on their own client just constantly sending packets setting their stormlight to full.
+     * @param context
+     */
+    public void handle(Supplier<NetworkEvent.Context> context) {
             context.get().enqueueWork(() -> {
-                //do stuff area
-                //when do this with custom entities dont need player uuid, world keeps synced perfect track of entititeIds
-                //PlayerEntity player = context.get().getSender();//.world.getPlayerByUuid(this.playerID);
+                //when do this with custom entities dont need player uuid, world keeps synced perfect track of entitieIds
                 ClientPlayerEntity player = Minecraft.getInstance().player;
                 if (player != null) {
                     IPlayerInfo cap = PlayerInfo.getFromPlayer(player);

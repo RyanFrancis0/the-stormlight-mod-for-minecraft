@@ -1,56 +1,53 @@
 This is the real short term document to help me think
 
+/*
+    - reread forge doc on gettting started: sides
+    - networking
+    - packets
+    - capabilities
+    "By default, capability data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets.
+    There are three different situations in which you may want to send synchronization packets, all of them optional:
+    When the entity spawns in the world, or the block is placed, you may want to share the initialization-assigned values with the clients.
+    When the stored data changes, you may want to notify some or all of the watching clients.
+    When a new client starts viewing the entity or block, you may want to notify it of the existing data."
+    "By default, the capability data does not persist on death. In order to change this, the data has to be manually copied when the player entity
+     is cloned during the respawn process.
+     This can be done via PlayerEvent$Clone by reading the data from the original entity and assigning it to the new entity.
+     In this event, the wasDead field can be used to distinguish between respawning after death and returning from the End.
+     This is important because the data will already exist when returning from the End, so care has to be taken to not duplicate values in this case."
 
+    https://github.com/mchorse/metamorph/blob/master/src/main/java/mchorse/metamorph/capabilities/CapabilityHandler.java
+    ABOVE LINK HAS ALL events needed to update player capability
 
-one place for stormlight effects. should be the player ontick
+    after eyars f searching here actually is a niceguys explanatino of it
+    http://jabelarminecraft.blogspot.com/p/minecraft-forge.html
+    http://jabelarminecraft.blogspot.com/p/minecraft-17x.html
+
+    also nice:
+    https://forums.minecraftforge.net/topic/77278-solved-1144-syncing-player-capabilities-to-client/
+    https://forums.minecraftforge.net/topic/79454-1151how-to-sync-my-custom-capability-from-server-to-client/
+
+    FMLNetworkConstants.playChannel.sendTo(msg, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);new FMLPlayMessages.
+*/
 
 Fixes:
-- fix breathing underwater (server?)
-    - cliet server thing killing me
-    - figure out what is going on with stormlight
 - fix blade bonding
     - ability to unbond in which case CAN Drop it as an item
-each entity has a data manager it can get and set to
 
-- reread forge doc on gettting started: sides
-- networking
-- packets
-- capabilities
-"By default, capability data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets.
-There are three different situations in which you may want to send synchronization packets, all of them optional:
-When the entity spawns in the world, or the block is placed, you may want to share the initialization-assigned values with the clients.
-When the stored data changes, you may want to notify some or all of the watching clients.
-When a new client starts viewing the entity or block, you may want to notify it of the existing data."
-"By default, the capability data does not persist on death. In order to change this, the data has to be manually copied when the player entity
- is cloned during the respawn process.
- This can be done via PlayerEvent$Clone by reading the data from the original entity and assigning it to the new entity.
- In this event, the wasDead field can be used to distinguish between respawning after death and returning from the End.
- This is important because the data will already exist when returning from the End, so care has to be taken to not duplicate values in this case."
+- make shardblade just have really high attack. instakill not a great idea.
+- make it have splash damage. does it already have it?
 
-https://github.com/mchorse/metamorph/blob/master/src/main/java/mchorse/metamorph/capabilities/CapabilityHandler.java
-ABOVE LINK HAS ALL events needed to update player capability
-
-after eyars f searching here actually is a niceguys explanatino of it
-http://jabelarminecraft.blogspot.com/p/minecraft-forge.html
-http://jabelarminecraft.blogspot.com/p/minecraft-17x.html
-
-also nice:
-https://forums.minecraftforge.net/topic/77278-solved-1144-syncing-player-capabilities-to-client/
-https://forums.minecraftforge.net/topic/79454-1151how-to-sync-my-custom-capability-from-server-to-client/
-
-FMLNetworkConstants.playChannel.sendTo(msg, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);new FMLPlayMessages.
-
-Continues:
-- increase reach when holding blade
-    - melee attack goal get reach sqr
-    - nvm player has final Iattribut reach distance  == RangedAttribute. default 5D, max 1024D
-        - registered attribute
 
 Nextses:
-- a surge? (windrunner acceleration)
 - spren
-- roshar dimension
-- shattered plains biome (maybe b4 above)
+- orders
+- surges
+- oath advancement
+
+Eventually:
+CanyonWorldCarver, ConfiguredCarver, ChunkGenerator. I think need set probability in configured carver to a low number to get a high amount of canyons.
+
+
 
 
 

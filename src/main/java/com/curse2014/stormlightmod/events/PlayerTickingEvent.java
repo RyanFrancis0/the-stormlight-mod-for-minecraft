@@ -3,6 +3,7 @@ package com.curse2014.stormlightmod.events;
 import com.curse2014.stormlightmod.StormlightMod;
 import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
 import com.curse2014.stormlightmod.capabilities.PlayerInfo;
+import com.curse2014.stormlightmod.objects.items.SphereItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
@@ -21,13 +22,13 @@ public class PlayerTickingEvent {
     //DO NOT WRITE TO STATIC FIELDS TO AFFECT TICK EVENT. IT MESSES UP LOGICAL CLIENT SERVER SYNC. At least I'm a self taught expert on those now I suppose.
     //I reckon way to go is not to try to slow down ticks, but to get used to them as a measure of speed. eveything is in the 1000s now.minutes are 10000s now
     //1 tick treying to be 0.05 seconds (20 ticks/s). 1 minecraft day == 24000 ticks = 20 minutes.1200 ticks == 1 minute. 1 minecraft week == 168,000 ticks.
-    //players need to drain faster than spheres.
+    //players need to drain faster than spheres do. Which means spheres need to charge players faster than that.
+    // gonna take some calibrating for all the diff sphere types
+    // so what should middle of the range sphere do. or the median anyway.
     //ah I could divorce the idea of time from quantity
     //shere could normal drain or charge once every 20 (or yay) ticks has passed, so long as it stores tick.
     //dont think i want player to do that, so build off of that
     //player could drain quickly and suck in quickly. but high volume might make stormlight bar kind of weird
-    private static Random rand = new Random();
-    private static int count = 0;
     public static Vec3d flightPath = null;
     private static Vec3d flightVelocity = null;
     private static double d0 = (double) (16777215 >> 16 & 255) / 255.0D;
@@ -38,7 +39,6 @@ public class PlayerTickingEvent {
     private static int minHoldBreathThreshold = 100;
     private static int normalDrainRate = -1;
     private static int reducedDrainRate = normalDrainRate + 1;
-    private static int highStormChargeRate = 1000;
 
     private static EffectInstance getEffectInstance(Effect effect) {
         return new EffectInstance(effect, potionEffectsDuration, 0, false, false);
@@ -73,16 +73,15 @@ public class PlayerTickingEvent {
         }
         PlayerEntity player = event.player;
         IPlayerInfo playerInfo = PlayerInfo.getFromPlayer(player);
-        //if (player.world.isRemote()) {
         float stormlight = playerInfo.getStormlight();
-        float newStormlight = stormlight + ((player.world.isThundering()) ? highStormChargeRate : normalDrainRate);
+        float newStormlight = stormlight + (isHoldingBreath(player, stormlight) ? normalDrainRate / 2f : normalDrainRate) + (player.world.isThundering() ? PlayerInfo.CHARGE_RATE : 0);
         if (stormlight > 0) {
-            // holding breath slows down loss of stormlight.
-            //if (!(isHoldingBreath(player, stormlight))) {
-                playerInfo.setStormlight(newStormlight);
-                stormlight = newStormlight;
-            //}
-            player.setGlowing(!player.isGlowing() && stormlight >= minHoldBreathThreshold);
+            playerInfo.setStormlight(newStormlight);
+            stormlight = newStormlight;
+            if (stormlight % 20 != 0) { // 20 == 1 second soo just slow down how fast this is happenning
+                return;
+            }
+            player.setGlowing(stormlight >= minHoldBreathThreshold);
             if (stormlight <= 0) {
                 flightPath = null;
                 player.removePotionEffect(Effects.SATURATION);
@@ -142,7 +141,7 @@ public class PlayerTickingEvent {
                 player.removePotionEffect(Effects.SLOWNESS);
             }
         }
-        //}
+        //Handle order's surges and passive effects
         if (!player.world.isRemote()) {
             if (flightPath != null) {
                 //player.setMotion(flightPath.x, flightPath.y, flightPath.z);
@@ -163,11 +162,5 @@ public class PlayerTickingEvent {
                 flightVelocity = null;
             }
         }
-        if (player.world.isRemote()) {
-            System.out.println("Client pticke thinks player stormlight is:" + stormlight);
-        } else {
-            System.out.println("Server pticke thinks player stormlight is:" + stormlight);
-        }
-        //System.out.println(stormlight);
     }
 }

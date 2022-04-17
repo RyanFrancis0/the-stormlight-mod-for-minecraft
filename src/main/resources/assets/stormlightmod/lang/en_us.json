@@ -2,9 +2,15 @@
 	"item.stormlightmod.example_item": "Example Item",
 	"item.stormlightmod.test_item": "Test Item",
 	"item.stormlightmod.special_item": "Special Item",
-	"item.stormlightmod.sphere_item": "Sphere Item",
 	"item.stormlightmod.def_item": "Deferred Item",
-	
+
+	"item.stormlightmod.emerald_broam": "Emerald Broam",
+	"item.stormlightmod.emerald_mark": "Emerald Mark",
+	"item.stormlightmod.emerald_chip": "Emerald Chip",
+	"item.stormlightmod.diamond_broam": "Diamond Broam",
+	"item.stormlightmod.diamond_mark": "Diamond Mark",
+	"item.stormlightmod.diamond_chip": "Diamond Chip",
+
 	"item.stormlightmod.example_sword": "Example Sword",
 	"item.stormlightmod.example_pickaxe": "Example Pickaxe",
 	"item.stormlightmod.example_shovel": "Example Shovel",

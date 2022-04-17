@@ -12,5 +12,5 @@ public class ItemInitNew {
 	
 	public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, StormlightMod.MOD_ID);
 	
-	public static final RegistryObject<Item> DEF_ITEM = ITEMS.register("def_item", () -> new SpecialItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.instance)));
+	public static final RegistryObject<Item> DEF_ITEM = ITEMS.register("def_item", () -> new SpecialItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)));
 }

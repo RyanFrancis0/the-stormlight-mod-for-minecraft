@@ -19,6 +19,6 @@ public class ForgeEventBusSubscriber {
 			DimensionManager.registerDimension(StormlightMod.EXAMPLE_DIM_TYPE, DimensionInit.EXAMPLE_DIM.get(), null,
 					true);
 		}
-		StormlightMod.LOGGER.info("Dimensions Registered!");
+		//StormlightMod.LOGGER.info("Dimensions Registered!");
 	}
 }

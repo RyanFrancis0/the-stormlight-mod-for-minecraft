@@ -3,19 +3,17 @@ package com.curse2014.stormlightmod.capabilities;
 import com.curse2014.stormlightmod.objects.items.ShardBladeItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.INBT;
-import net.minecraft.world.storage.loot.RandomValueRange;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class PlayerInfo implements IPlayerInfo {
     private float stormlight = 0f; // max 1000
     private int blade = -1;
     private ArrayList<ShardBladeItem> bondedBlades = new ArrayList<>();
     private int ideal = 4; //1==1st surge && stormlight 2==blade 3==2nd surge, 4==plate, change to 0 post oath making
-    private Random rand = new Random();
     public int order = 0;// rand.nextInt();//list orders
-    public int maxStormlight = 1000;
+    public static int MAX_STORMLIGHT = 10000;
+    public static int CHARGE_RATE = 1000;
 
     @Override
     public float getStormlight() {
@@ -34,8 +32,8 @@ public class PlayerInfo implements IPlayerInfo {
             this.stormlight = stormlight;
             if (this.stormlight < 0) {
                 this.stormlight = 0;
-            } else if (this.stormlight > this.maxStormlight) {
-                this.stormlight = this.maxStormlight;
+            } else if (this.stormlight > MAX_STORMLIGHT) {
+                this.stormlight = MAX_STORMLIGHT;
             }
         }
     }

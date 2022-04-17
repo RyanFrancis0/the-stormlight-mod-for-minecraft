@@ -88,7 +88,7 @@ public class ShardBladeItem extends SwordItem {
      */
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlotType) {
         //PlayerEntity.REACH_DISTANCE says (in this update) standard player reach is 5.0D.
-        double shardbladeAdditionalReach = 4.0D;
+        double shardbladeAdditionalReach = 3.0D;
         Multimap<String, AttributeModifier> attributeModifiers = super.getAttributeModifiers(equipmentSlotType);
         if (equipmentSlotType == EquipmentSlotType.MAINHAND) {
             attributeModifiers.put(PlayerEntity.REACH_DISTANCE.getName(), new AttributeModifier(UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA2"), "Weapon modifier", shardbladeAdditionalReach, AttributeModifier.Operation.ADDITION));

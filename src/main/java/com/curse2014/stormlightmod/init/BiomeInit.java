@@ -24,20 +24,28 @@ public class BiomeInit {
 	public static final DeferredRegister<Biome> BIOMES = new DeferredRegister<>(ForgeRegistries.BIOMES,
 			StormlightMod.MOD_ID);
 
-	public static final RegistryObject<Biome> EXAMPLE_BIOME = BIOMES
-			.register("example_biome",
+	public static final RegistryObject<Biome> EXAMPLE_BIOME = BIOMES.register(
+			"example_biome",
 					() -> new ExampleBiome(
 							new Biome.Builder().precipitation(RainType.SNOW).scale(1.2f).temperature(0.5f)
-									.waterColor(16724639).waterFogColor(16762304)
-									.surfaceBuilder(
+									.waterColor(16724639).waterFogColor(16762304).surfaceBuilder(
 											new ConfiguredSurfaceBuilder<SurfaceBuilderConfig>(
-													register("example_surface",
+													register(
+															"example_surface",
 															new ExampleBiomeSurfaceBuilder(
-																	SurfaceBuilderConfig::deserialize)),
-													new SurfaceBuilderConfig(Blocks.COARSE_DIRT.getDefaultState(),
+																	SurfaceBuilderConfig::deserialize
+															)
+													),
+													new SurfaceBuilderConfig(
+															Blocks.COARSE_DIRT.getDefaultState(),
 															Blocks.DIRT.getDefaultState(),
-															Blocks.DIRT.getDefaultState())))
-									.category(Category.PLAINS).downfall(0.5f).depth(0.12f).parent(null)));
+															Blocks.DIRT.getDefaultState()
+													)
+											)
+									)
+									.category(Category.PLAINS).downfall(0.5f).depth(0.12f).parent(null)
+					)
+	);
 
 	public static void registerBiomes() {
 		registerBiome(EXAMPLE_BIOME.get(), Type.PLAINS, Type.OVERWORLD);
