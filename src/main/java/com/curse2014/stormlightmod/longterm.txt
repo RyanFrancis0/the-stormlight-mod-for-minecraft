@@ -10,7 +10,7 @@ Important tenets to remember:
     2. needs to be interesting for devs
         - biggest threat to project is inevitable loss of time and interest
         - so don't spend a month just figuring out how to implement wind you'll inevitably hate it
-        - find someone to to textures/models as you really hate that stuff and aren't good at design anyway
+        - find someone to do textures/models as you really hate that stuff and aren't good at design anyway
         - get public server going
         ! get community behind this to keep me honest
             - fb
@@ -22,7 +22,7 @@ Important tenets to remember:
         - mining should be NECESSARY every so often
             - at this stage all I can think of is make it only reasonable way to get spheres (ingredients to make them)
 
-* MVP
+* MVP (The Stormlight Mod for Minecraft Beta v 1.0.0)
     - on log in, if no spren, gen generic spren buddy and have chat msg "You notice a _ spren nearby. It seems to be following you around..."
         - on rclkc should go "_ spren: Speak again the ancient oaths <username>"
     - surges
@@ -34,16 +34,19 @@ Important tenets to remember:
         - no don't do this. let players create new worlds and try their luck
             - but they may want to try different powers in the exact same world. They've probably put a lot of work into the world. Put a lot of work into getting surges.
             - actually yeah I stand by this. PLayers will want diff powers in same world. Ender dragon good way to reset too.
+        - OR Drop an honourblade that isn't bonded to player
 
 * spren
+    - 	So atm, I don't need to store jack about spren in player info. name is order
+        - player probs want nametag though
     - all 10 main ones spawn reasonably frequently near unbonded players
         - maybe parrot behaviour just to begin with
         - the other ones will take FOREVER to do
-    - bond by typing out 3 oathes in succession. (rclk, or feed stormlight? to get spren 'ready')
+    - bond by typing out 1st oath. (rclk, or feed stormlight? to get spren 'ready')
     - once bonded gets named by you "I... almost...remember... I had a name once, what was it?"
     - follows you around
     - invincible
-    - when you die it dies (forever) and drops as a dead shard blade that any1 but u can pick up.
+    - when you die it dies (forever) and (if uve unlocked it as shardblade) it drops as a dead shard blade that any1 but u can pick up.
         - msg life before death appears on death gui
     - exponentialy increasing wait time between bonding new spren
         - challene of letting people try out diff orders. need fiure out appropriate cost
@@ -52,16 +55,27 @@ Important tenets to remember:
     - not normally placeable but eventually someway definitely able to place as 2x1 block entity (like armourstand) face down in stone
     - cannot drop, be placed in item frame, or placed in a non player inventory.
     - Maybe make shardblade slower than normal sword?
-    - always drop on player death
+    - always drop as dead variant on player death
     - if not radiant:
         - if do held rclc like food should 'unbond' and drop.
+    - honourblades
+        - only get powers while in active hand. hmm or in inventory rather
+            - while in inventory must use those powers
+    - can only have 1 bonded shardblade in inventory at a time
+        - dismissal and summoning rotates through them
+        - eventually will need to make a menu i guess
 
 * shardplate
-    - jumping 2 boost
-        - pants and boots?
     - maximum possible armour value
-    - resistance 2 effect when all armour on
-    - if is 'live' some way to toggle visibility? would become visible on someone attcking the player. long way down track.
+    - when all armour on
+        - jumping boost + 1
+        - resistance + 3
+        - strength + 1 ?
+        - absorption + 4
+    - always drop as dead variant on player death
+    - if dead can be repaired in anvil with sphere
+    - if live doesnt take damage
+    - if is 'live' some way to toggle visibility? would become visible when player takes damage. long way down track.
 
 * spheres
     - sphere chalice (glass in a u) that store spheres and be placed
@@ -71,6 +85,7 @@ Important tenets to remember:
 * 10 orders:
     - unlocking oaths
         - fulfilling one won't unlock it unless all previous unlocked
+        - seeing as how a lot of orders have oaths that don't "unlock" anything I might unlock passive effects in there instead
         - 1st oath
             - instantly accepted by spren. just say in chat "Life before death, strength before weakness, journey before destination."
                 - HUD bar will appear. msg or eventually advancement will say what happenned
@@ -86,14 +101,13 @@ Important tenets to remember:
     - two quick access keys (if surge requires that)
         - 'v' - the quickest
         - 'x' - if other surge also needs key access
-    - some orders (but try most) will have passive stormlight effects
 
     * windrunners
         - oaths
             - 1st oath
-                - unlock stormlight and both surges
+                - unlock stormlight and gravitation and adhesion
             - 2nd oath
-                - useless step
+                - nothing (passive gravitation)
             - 3rd oath
                 - unlock shardblade
             - 4th oath
@@ -103,17 +117,25 @@ Important tenets to remember:
         - surges
             - adhesion
                 - sticking things together ("full lashing")
+                - need to be somethingaight to seperate from skybreakers
             - gravitation (arbitrarily setting this to 'v' surge)
+                - player.addVelocity(flightPath.x, flightPath.y, flightPath.z);//flightpath being a scaled vector. this could accelerate you orrr
+                - might be best to do tap into the horse jup bar to get speed to accelerate to
+                    - maybe max is as fast as powered rail cos stuff spawns slow
+                    - ClientPlayerEntity. scroll to below section. looks like know when space held and can accumulate, so perhaps adapt that to v
+                        if (this.isRidingHorse()) {
+                               IJumpingMount ijumpingmount = (IJumpingMount)this.getRidingEntity();
+                     - how then to disable? if less than 2 seconds or 1 second? PLayers would prefer an indicator of that.
                 - can accelerate in pointing direction
                 - can change gravity of a block or an itementity
                     - if not of type plant?
         - passive effect
-            - slow falling?, jump? (reserve jump for shardplate)
+                - (gravitation) slow falling. or perhaps jump boost + 1. jump bost really makes no sense
 
     * skybreakers
         - oaths
             - 1st oath
-                - useless step
+                - nothing
             - 2nd oath
                 - unlock stormlight and graviation
             - 3rd oath
@@ -123,38 +145,72 @@ Important tenets to remember:
             - 5th oath
                 - unknown (but shardplate amiright)
         - surges
-            - division ('x' surge)
-                - create explosion (that does not harm user)
-            - gravitation (arbitrarily setting this to 'v' surge)
-                - can accelerate in pointing direction
-                - can change gravity of a block or an itementity
+            - division ('rclkc' surge)
+                - create explosion around thing you rclkcd (that does not harm user)
+                    - can also use jump bar so long as both not using bar at same time
+                        - I think jump bar still works, as long as sucking in stormlight?
+                            - jump bar either way does slow down attack capabilities/usefulness
+                            - brainstorm alternatives
+                                - bow and arrow but launch explosion
+                                - maybe just drain up to a certain amount of stormlight on rclkc
+            - gravitation ('v')
+                - see above
         - passive effect
-                - (division) haste 1
-                - (gravitation) slow falling
+                - (division) haste 1 ('x')
+                - (gravitation) see above
 
     * dustbringers (releasers)
         - oaths
             - 1st oath
-                - unknown (but sotrmlight and abrasion)
+                - unknown (stormlight and abrasion)
             - 2nd oath
-                - unknown (ima do useless)
+                - unknown (passive abrasion)
             - 3rd oath
                 - unlock division and (presumably) shardblade
             - 4th oath
-                - unknown (but shardplate amiright)
+                - unknown (shardplate)
             - 5th oath
                 - unknown
         - surges
-            - division ('x' surge)
-                - create explosion (that does not harm user)
-            - abrasion (arbitrarily setting this to 'v' surge)
-                - speed 2/1
-                    - alternatively, normal speed or speed 1 but when click preserve momentum till hit something (no slowdown due to friction/wind resistance). would also lose ability to change direction until clicked v again
+            - division ('rclk')
+                - see above
+            - abrasion ('v')
+                - preserve momentum till hit something (no slowdown due to friction/wind resistance). would also lose ability to change direction until clicked v again
+                    - might be able to increase speed and add slipperiness without speed effect
+                    - tricky cos I'm skipping a wee bit of code b4 travel
+                    - in tick execute last part of living entity travel with custom slipperiness
+                    - if (!this.isElytraFlying() && ((!this.isInWater() && this.isInLava()!) || this instanceof PlayerEntity && ((PlayerEntity)this).abilities.isFlying)) {
+                          BlockPos blockpos = this.getPositionUnderneath();
+                          float slipperiness = this.world.getBlockState(blockpos).getSlipperiness(world, blockpos, this);
+                          double momentum = (double) this.onGround ? slipperiness * 0.91F : 0.91F;
+                          this.moveRelative(this.getRelevantMoveFactor(slipperiness), p_213352_1_);
+                          this.setMotion(this.func_213362_f(this.getMotion()));
+                          this.move(MoverType.SELF, this.getMotion());
+                          Vec3d vec3d5 = this.getMotion();
+                          if ((this.collidedHorizontally || this.isJumping) && this.isOnLadder()) {
+                             vec3d5 = new Vec3d(vec3d5.x, 0.2D, vec3d5.z);
+                          }
+
+                          double d10 = vec3d5.y;
+                          if (this.isPotionActive(Effects.LEVITATION)) {
+                             d10 += (0.05D * (double)(this.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1) - vec3d5.y) * 0.2D;
+                             this.fallDistance = 0.0F;
+                          } else if (this.world.isRemote && !this.world.isBlockLoaded(blockpos)) {
+                             if (this.getPosY() > 0.0D) {
+                                d10 = -0.1D;
+                             } else {
+                                d10 = 0.0D;
+                             }
+                          } else if (!this.hasNoGravity()) {
+                             d10 -= d0;
+                          }
+                          this.setMotion(vec3d5.x * momentum, d10 * (double)0.98F, vec3d5.z * momentum);
+                    }
                 - climbing walls like spider (speed stops ?)
-                - (dustbringer) walk through water speed
+                - needs to remember is v active
         - passive effect
-                - (division) haste 2
-                - (abrasion) speed 1
+                - (division) haste 2 ('x')
+                - (abrasion) dolphin's grace (if in water and 'v')
 
     * edgedancers
         - oaths
@@ -165,72 +221,82 @@ Important tenets to remember:
             - 3rd oath
                 - unlock shardblade
             - 4th oath
-                - unknown (but shardplate amiright)
+                - unknown (shardplate)
             - 5th oath
                 - unknown
         - surges
-            - progression (rclkc with empty hand)
+            - progression (rclkc w/ empty hand)
                 - can bonemeal plants and heal mobs (instant, fixed # hearts per rclk)
-            - abrasion (arbitrarily setting this to 'v' surge)
+            - abrasion ('v')
                 - see above
         - passive effect
-                - (progression) regen 2
-                - (abrasion) speed 2 (3?)
+                - (progression) regen 2 ('x')
+                - (abrasion) dolphin's grace (if v active and in water)
 
     * truthwatchers
         - oaths
             - 1st oath
                 - unlock stormlight and progression
             - 2nd oath
-                - unknown (ima do illumination)
+                - unknown (illumination)
             - 3rd oath
-                - unknown (but shardblade amiright)
+                - unknown (shardblade)
             - 4th oath
-                - unknown (but shardplate amiright)
+                - unknown (shardplate)
             - 5th oath
                 - unknown
         - surges
-            - progression (rclkc with empty hand)
+            - progression (rclkc w/ empty hand)
                 - see above
             - illumination
                 - in anvil, put block item in prime slot, sphere in secondary slot
                 - creates stormlight_ version of that block.
-                - generate stack of quantity depending on amount of stormlight in sphere
+                - generate stack of quantity depending on amount of stormlight in sphere (up to 64 ofc)
+                    - cannot leave inventory unless placing
+
                 - each placed block drains stormlight from user until:
                     - the user breaks it (let's do instant break by user)
-                        - other players can't break it, but placing a real block 'on' it will instead replace that block
+                    - a real block is placed 'on' it (will replace that block)
                     - the user moves away (tricky, let's say) > ~4 chunks.
-                        - if user logs out that destroys illusion. want to avoid creating a fake account and never logging in again hack.
-                    - the user runs out of stormlight
+                    - the user logs out. want to avoid creating a fake account and never logging in again hack.
+                    - the user runs out of stormlight.
                 - while a bock is placed and being funded user will not suffer normal drain or generate particles
+                - perhaps eventually rclkc a player or mob (perhaps while holding book and quill or painting) to outwardly look like that mob, till hit or run out of stormlight (no additional drain) or logs out
+                    - this would replace invisibility
         - passive effect
-                - (progression) regen 2
-                - (illumination) 'v' key to toggle invisibility (will stop generate particle too. but still drain like normal)
+                - (progression) regen 2 ('x')
+                - (illumination) invisibility ('v') (will stop generate particle too. but still drain like normal)
 
     * lightweavers
         - oaths
             - 1st oath
                 - unlock stormlight and illumination
             - 2nd oath
-                - unlock soulcasting and shardblade
+                - unlock transformation and shardblade
             - 3rd oath
-                - unknown (useless)
+                - unknown (passive illumination)
             - 4th oath
                 - unknown (but shardplate amiright)
             - 5th oath
                 - unknown
         - surges
             - transformation
-                - hold 'x' to teleport to shadesmare (1 way, virtually full player stormlight required and consumed)
-                    - portal gui like nether portal, it's not instantaneous.
-                        - ooh could start draining more stormlight while portal animation going on, so have to be sucking in from sphere while doing it
-                -
+                - shelve below idea
+                    - hold 'x' to teleport to shadesmare (1 way, virtually full player stormlight required and consumed)
+                        - portal gui like nether portal, it's not instantaneous.
+                            - ooh could start draining more stormlight while portal animation going on, so have to be sucking in from sphere while doing it
+                    - maybe appear in shadesmare as spectator mode?
+                - in anvil put sphere item in prime slot. it can be used 5 times for chips, 10 for marks, 15 for broams.
+                - converts stormlight to item 1:1 (up to a stack each use)
+                - perhaps eventually transform blocks into other blocks if holding sphere with enough stormlght
+                    - do that in shadesmare somehow?
+                    - could be OP to transform another player's abse into fire
             - illumination
                 - see above
         - passive effect
-                - (illumination) 'v' key to toggle invisibility (will stop generate particle too. but still drain like normal)
+                - (illumination) invisibility ('v') (will stop generate particle too. but still drain like normal)
         - sticks do diamond sword damage to lightwaeavers and set them on fire XD
-        - great quote: "I’m sorry that your mystical, godlike powers do not instantly work as you would like them to.” - Pattern, WOR CH 60
+        - great quote: "I’m sorry that your mystical, godlike powers do not instantly work as you would like them to.” - Pattern, WOR ch 60
 
     * elsecallers
         - oaths
@@ -248,13 +314,13 @@ Important tenets to remember:
             - transformation
                 - see above
                 - quote saying elsecallers more skilled at this than lightweavers so perhaps reduced restrictions/costs
-            - transportation
-                - can at any point in shadesmar return to roshar (or normal world)
-                    - perhaps 19 in 20 chance of failing (no large instant consumption of investiture though)
+            - transportation ('x')
+                - can at any point in shadesmare return to roshar (or normal world)
+                    - perhaps 19 in 20 chance of failing (no large instant consumption of investiture though, just player frustration and complaints about being "stuck")
                 - in interest of fairness need something more from this:
                     - may need to not allow lightweavers to go to shadesmare. or perhaps lightweavers need restrictive stormlight cost to do it.
-        - passive effect
-                -
+                - perhaps in lieu of , can teleport in direction of eyeline (highest y of block yay away)
+                    - get jump bar back like windrunners
 
     * willshapers
         - oaths
@@ -269,23 +335,22 @@ Important tenets to remember:
             - 5th oath
                 - unknown
         - surges
-            - conhesion
-                - 'v'
-                    - can only toggle when standing on a stone block (or rock like block) (or maybe preserve has to be stone)
-                    - stone appears in empty air beneath player, consumes stormlight and stone from inventory
-                        - will need to disable fravity on player while happenning
-                        - so allows for a sort of proto flight
-                        - perhaps standing next to stone alright otherwise hard to get down
-                        - perhaps shift create stone steps going downwards in direction of movement
-                            - perhaps diagonal y movement always steps
+            - conhesion ('v')
+                - can only toggle when standing on a stone block (or rock like block) (or maybe preserve has to be stone)
+                - stone appears in empty air beneath player, consumes stormlight and stone from inventory
+                    - will need to disable gravity on player while happenning
+                    - so allows for a sort of proto flight
+                    - perhaps standing next to stone alright otherwise hard to get down
+                    - perhaps shift create stone steps going downwards in direction of movement
+                        - perhaps diagonal y movement always steps
+                        - but can't sneak off a square
                 - can instant destroy stone
-                - in an anvil can use stormlight to double a stone stack (or perhaps just need 1 stone block)
+                - not 'v' in an anvil can 1:1 covert stormlight to stone (at least 1 stone in prime slot, sphere in secondary)
                     - and double other blocks made out of stone or any kind of cobble? or even detritus stone?
             - transportation
                 - see above
         - passive effect
-                ? resistance 1?
-                ? strength 1 ?
+                - (cohesion) + 1 resistance
 
     * stonewards
         - oaths
@@ -302,21 +367,20 @@ Important tenets to remember:
         - surges
             - conhesion
                 - see above
-            - tension
+            - tension ('x')
                 - "alter the stiffness of an object" "allowing them to harden clothing into weapons"
-                - 'x'
-                    - perhaps while toggled add protection enchantments to worn armour (inclusind shardplate?) and attack to weapon/tool in main hand (including shardblade?)
-                        - might be too OP for all stonewards to be superior in a fight with other orders. multiplayer will get frustrated
-                        - (not sharpness to swords, as shardbaldes renders that redundant)
-                        - (not generic protection as shardplate renders that redundant)
+                - perhaps while toggled add protection enchantments to worn armour (including shardplate?) and attack to weapon/tool in main hand (including shardblade?)
+                    - might be too OP for all stonewards to be superior in a fight with other orders. multiplayer will get frustrated
+                    - (not sharpness to swords, as shardbaldes renders that redundant)
+                    - (not generic protection as shardplate renders that redundant)
         - passive effect
-                - strength 2
-                ? resistance 1 ?
+                - (tension) + 1 strength
+                - (cohension) + 1 resistance
 
     * bondsmiths
         - get no spren or shardblade
         - only 3 allowed in any given server/world at a time (1 for each spren)
-            - cmds can remove. so pretty much server owner in control of that
+            - cmds set. so pretty much server owner in control of that
         - oaths
             - 1st oath
                 - light and 'v'
@@ -346,8 +410,8 @@ Important tenets to remember:
             - when right click an aggressive mob change it's behaviour to passive
                 - will persist even if mob attacked? no, will need to rclkc again
                 - constant drain till stops.
-                - stops when mob dies or right clicked again
-                - at which point if normal behavoiur aggressive will become aggressive again
+                - stops when mob dies or right clicked again or run out of stormlight
+                - at which point behaviour will reset (so if normal behavoiur aggressive will become aggressive again)
         - "A knowledgeable Bondsmith may directly manipulate more specialized Connections to steal something like a Nahel bond, the mantle of a champion, strength, Breaths, the ability to use Allomancy, etc"
             - perhaps give access to certain custom created cmds.
                 - such as drain a player of all stormlight
@@ -366,14 +430,13 @@ Important tenets to remember:
 
 * chasm fiend
     - mini boss
-    - drops perfect gemstone as reward (kown as _ drop)
+    - drops perfect gemstone as reward (known as _ drop)
     - should pretty much need the damage and reach of a shardblade to attack, maybe the protection of plate to properly battle with
-    - invulnerable to arrows? or takes way less damage (unless you trap it somehow?)
     - enderdragon's ability to destroy most blocks adjacent to it?
-    - should do knockback/throw player into air like that one mob im thinking of
-    - good reach and as fast as non sprinting player
+    - should do knockback/throw player into air like hog
+    - good reach and as fast as sprinting player
     - rarish, generate below certain block level in shattered plains, with right space and light level
-        - then would be real vulnerable to falling lava or bow shots, or drowning, or falling gravel/sand
+        - then would be real vulnerable to falling lava or bow shots, or drowning, or falling gravel/sand, thrown potions
             - probably best to make it invulnerable to those then
 
 * shattered plains biome
@@ -385,6 +448,10 @@ Important tenets to remember:
     - once every 2 minecraft days
     - just starts out as thunder at beginning as wind CRAZY hard to insert into mc
     - shudder to think about moving it across roshar dimension
+    - so currently lightning is 1/10000 ticks in render distance of player if is thundering and raining
+        - so I reckon I dd my own 1 in 1000 during highstorm
+        - can just check time, if in window make sure raining and thundering and then throw in some lightning bolts
+        - may need to send to client (check)
 
 * shadesmar dimension
     - tieing it to overworld layout will take a while to figure out/implement

@@ -55,8 +55,8 @@ public class ExampleEntity extends AnimalEntity {
 		this.goalSelector.addGoal(0, new SwimGoal(this));
 		this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
 		this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-		this.goalSelector.addGoal(3,
-				new TemptGoal(this, 1.1D, Ingredient.fromItems(ItemInitNew.DEF_ITEM.get()), false));
+		//this.goalSelector.addGoal(3,
+		//		new TemptGoal(this, 1.1D, Ingredient.fromItems(ItemInitNew.DEF_ITEM.get()), false));
 		this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
 		this.goalSelector.addGoal(5, this.eatGrassGoal);
 		this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));

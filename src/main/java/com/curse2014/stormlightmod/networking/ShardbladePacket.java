@@ -33,10 +33,13 @@ public class ShardbladePacket {
         public void handle(Supplier<NetworkEvent.Context> context) {
             context.get().enqueueWork(() -> {
                 //do stuff area
-                ServerPlayerEntity player = context.get().getSender().world.getServer().getPlayerList()
-                        .getPlayerByUUID(playerID);
-                //PlayerEntity b = Minecraft.getInstance().player;/this actually workds
-                player.addItemStackToInventory(stack);
+                ServerPlayerEntity player = context.get().getSender();
+                if (player != null) {
+                    PlayerEntity p = player.world.getPlayerByUuid(playerID);
+                    if (p != null) {
+                        p.inventory.add(player.inventory.currentItem, stack);
+                    }
+                }
             });
             context.get().setPacketHandled(true);
         }

@@ -25,29 +25,15 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(modid = StormlightMod.MOD_ID, bus = Bus.MOD)
 @ObjectHolder(StormlightMod.MOD_ID)
 public class ItemInit {
-	public static final Item example_item = null;
-	public static final Item test_item = null;
-	public static final Item special_item = null;
-
+	//Final shardblade stats
 	public static final Item shardblade_item = new ShardBladeItem(
-			ItemTier.DIAMOND,
-			20,
-			6,
 			new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
 	);
 
-	// Tools
-	public static final Item example_sword = null;
-	public static final Item example_pickaxe = null;
-	public static final Item example_shovel = null;
-	public static final Item example_axe = null;
-	public static final Item example_hoe = null;
-
-	// Armor
-	public static final Item test_helmet = null;
-	public static final Item test_chestplate = null;
-	public static final Item test_leggings = null;
-	public static final Item test_boots = null;
+	//TODO: repeat for all others, register and get sprens and whatnot
+	public static final Item windrunner_honourblade = new ShardBladeItem(
+			new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
+	);
 
 	/**
 	 * remember each item needs its own instance of item properties
@@ -56,19 +42,7 @@ public class ItemInit {
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> reg = event.getRegistry();
-		reg.register(
-				new Item(new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
-				).setRegistryName("example_item"));
-		reg.register(
-				new Item(new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
-						.food(new Food.Builder().hunger(6).saturation(1.2f)
-								.effect(new EffectInstance(Effects.ABSORPTION, 6000, 5), 0.7f).build())
-						).setRegistryName("test_item")
-		);
-		reg.register(
-				new SpecialItem(new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
-				.setRegistryName("special_item")
-		);
+		//.food(new Food.Builder().hunger(6).saturation(1.2f).effect(new EffectInstance(Effects.ABSORPTION, 6000, 5), 0.7f).build())
 
 		reg.register(new SphereItem(
 				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic),
@@ -104,34 +78,28 @@ public class ItemInit {
 
 		reg.register(shardblade_item.setRegistryName("shard_blade_item"));
 
-		// Tools
-		reg.register(
-				new SwordItem(ModItemTier.EXAMPLE, 7, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
-						.setRegistryName("example_sword"));
-		reg.register(
-				new PickaxeItem(ModItemTier.EXAMPLE, 4, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
-						.setRegistryName("example_pickaxe"));
-		reg.register(
-				new ShovelItem(ModItemTier.EXAMPLE, 2, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
-						.setRegistryName("example_shovel"));
-		reg.register(
-				new AxeItem(ModItemTier.EXAMPLE, 11, 3.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
-						.setRegistryName("example_axe"));
-		reg.register(
-				new HoeItem(ModItemTier.EXAMPLE, 5.0f, new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic))
-						.setRegistryName("example_hoe"));
-
 		// Armor
-		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.HEAD,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_helmet"));
-		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.CHEST,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_chestplate"));
-		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.LEGS,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_leggings"));
-		reg.register(new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.FEET,
-				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)).setRegistryName("test_boots"));
+		/*
+		reg.register(new ArmorItem(
+				ModArmorMaterial.TEST, EquipmentSlotType.HEAD,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
+		).setRegistryName("test_helmet"));
+		reg.register(new ArmorItem(
+				ModArmorMaterial.TEST, EquipmentSlotType.CHEST,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
+		).setRegistryName("test_chestplate"));
+		reg.register(new ArmorItem(
+				ModArmorMaterial.TEST, EquipmentSlotType.LEGS,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
+		).setRegistryName("test_leggings"));
+		reg.register(
+				new ArmorItem(ModArmorMaterial.TEST, EquipmentSlotType.FEET,
+				new Item.Properties().group(StormlightMod.StormlightItemGroup.Basic)
+				).setRegistryName("test_boots"));
+		 */
 	}
-
+	//TODO: KEEP BELOW!!!!!!!!!!!!!
+	/*
 	public enum ModItemTier implements IItemTier {
 		// int harvestLevel, int maxUses, float efficiency, float attackDamage, int
 		// enchantability, Supplier<Ingredient> repairMaterial
@@ -186,7 +154,10 @@ public class ItemInit {
 			return this.repairMaterial.getValue();
 		}
 	}
+	*/
 
+	//TODO: KEEP BELOW!!!!!!!!!!!!!
+	/*
 	public enum ModArmorMaterial implements IArmorMaterial {
 		TEST(StormlightMod.MOD_ID + ":test", 5, new int[] { 7, 9, 11, 7 }, 420, SoundEvents.field_226124_Y_, 6.9F, () -> {
 			return Ingredient.fromItems(ItemInit.test_item);
@@ -249,4 +220,5 @@ public class ItemInit {
 			return this.toughness;
 		}
 	}
+	 */
 }

@@ -49,10 +49,10 @@ public class BlockInit {
 						.slipperiness(1.2f).speedFactor(0.7f).noDrops()
 				).setRegistryName("specal_block")
 		);
-		reg.register(
-				new ModCropBlock(Block.Properties.create(Material.ORGANIC), ItemInit.special_item, 5)
-						.setRegistryName("test_crop")
-		);
+//		reg.register(
+//				new ModCropBlock(Block.Properties.create(Material.ORGANIC), ItemInit.special_item, 5)
+//						.setRegistryName("test_crop")
+//		);
 		// event.getRegistry().register(new
 		// BlockTest(Block.Properties.create(Material.WOOD).hardnessAndResistance(1.5f,
 		// 18.0f).sound(SoundType.WOOD).harvestLevel(1).harvestTool(ToolType.AXE)));

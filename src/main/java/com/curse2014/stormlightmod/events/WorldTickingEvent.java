@@ -11,7 +11,7 @@ public class WorldTickingEvent {
     @SubscribeEvent
     public static void onThunder(TickEvent.WorldTickEvent event) {
         WorldInfo world = event.world.getWorldInfo();
-        if (!world.isThundering() || event.phase != TickEvent.Phase.START) {
+        if (event.phase != TickEvent.Phase.START || !world.isThundering()) {
             return;
         }
         //System.out.println(event.world.thunderingStrength);

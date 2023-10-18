@@ -52,7 +52,7 @@ public class StormlightMod {
 		StormlightModPacketHandler.registerMessage();
 
 		SoundInit.SOUNDS.register(modEventBus);
-		ItemInitNew.ITEMS.register(modEventBus);
+		//ItemInitNew.ITEMS.register(modEventBus);
 		BlockInitNew.BLOCKS.register(modEventBus);
 		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
 		ModContainerTypes.CONTAINER_TYPES.register(modEventBus);

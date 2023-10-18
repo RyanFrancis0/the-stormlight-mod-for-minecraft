@@ -1,10 +1,27 @@
 This is the real short term document to help me think
 
+JESUS CHRIST I had no idea how much work goes into even a s***** mod.
+    - like seriously 1 entity needs a huge deal about it
+    -
+
+- spren x 1 (x9)
+- surges x 10
+- polestones x 10 == 64 all up.
+    - ores x10
+        - create new class for each
+    - pieces x30
+        - create new class for pieces. have size small, middle, large. and ofc type
+    - spheres x24
+    - for each item added
+        - texture
+        - model
+        - lang_us
+        - register
+- advancements (x3)
+    - should be pretty easy actually
+- testing (x all of above)
+
 /*
-    - reread forge doc on gettting started: sides
-    - networking
-    - packets
-    - capabilities
     "By default, capability data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets.
     There are three different situations in which you may want to send synchronization packets, all of them optional:
     When the entity spawns in the world, or the block is placed, you may want to share the initialization-assigned values with the clients.
@@ -34,7 +51,6 @@ Fixes:
 - fix blade bonding
     - ability to unbond in which case CAN Drop it as an item
 
-- make shardblade just have really high attack. instakill not a great idea.
 - make it have splash damage. does it already have it?
 
 

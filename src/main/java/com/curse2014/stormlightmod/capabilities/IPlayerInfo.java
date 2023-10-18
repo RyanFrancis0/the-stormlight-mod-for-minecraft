@@ -1,33 +1,54 @@
 package com.curse2014.stormlightmod.capabilities;
 
+import com.curse2014.stormlightmod.custom.orders.Order;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBT;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface IPlayerInfo {
     //get and change info
-    public float getStormlight();
+    float getStormlight();
 
-    public void changeStormlight(float stormlight);
+    void changeStormlight(float stormlight);
 
-    public void setStormlight(float stormlight);
+    void setStormlight(float stormlight);
 
-    public int getBlade();
+    int getBlade();
 
-    public void setBlade(int blade);
+    List<ItemStack> getBlades();
 
-    public int getIdeal();
+    void addBlade(ItemStack blade);
 
-    public void oathAccepted();
+    void setBlade(int blade);
 
-    public int getOrder();
+    void bondBlade(ItemStack blade, boolean isAlive);
 
-    public void setOrder(int order);
+    void unbondBlade(ItemStack blade);
 
-    public INBT convertToNBT();
+    boolean isBondedTo(ItemStack blade);
 
-    public void setValuesFromNBT(INBT nbt);
+    boolean isMyBlade(ItemStack blade);
 
-    public boolean canDoThing(int thing);
+    ItemStack getCurrentBlade();
+
+    int getIdeal();
+    
+    void setIdeal(int ideal);
+
+    void oathAccepted();
+
+    Order getOrder();
+
+    int getOrderNumber();
+
+    void setOrder(int order);
+
+    INBT convertToNBT();
+
+    void setValuesFromNBT(INBT nbt);
+
+    boolean canDoThing(int thing);
 }

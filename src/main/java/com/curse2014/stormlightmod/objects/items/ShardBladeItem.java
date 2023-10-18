@@ -1,7 +1,11 @@
 package com.curse2014.stormlightmod.objects.items;
 
+import com.curse2014.stormlightmod.capabilities.IPlayerInfo;
+import com.curse2014.stormlightmod.capabilities.PlayerInfo;
+import com.curse2014.stormlightmod.init.ItemInit;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -27,49 +32,35 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public class ShardBladeItem extends SwordItem {
-    private boolean isHonourBlade = false;
-    private boolean isDeadSpren = true;
-    private PlayerEntity master = null;
-    private String name = "Oathbringer";
+    public enum Type {
+        LIVING,
+        DEAD,
+        HONOURBLADE
+    }
 
-    public ShardBladeItem(IItemTier tier, int attackDamage, float attackSpeed, Properties properties) {
-        super(tier, attackDamage, attackSpeed, properties);
+    public ShardBladeItem(Properties properties) {
+        super(ItemTier.DIAMOND,20,6, properties);
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack a, World world, BlockState b, BlockPos bPos, LivingEntity c) {
+        return true;
     }
 
     /**
      * Not a pickaxe.
-     * @param a
-     * @param world
      * @param b
-     * @param bPos
-     * @param c
-     * @return
+     * @return false
      */
     @Override
-    public boolean onBlockDestroyed(ItemStack a, World world, BlockState b, BlockPos bPos, LivingEntity c) {
-        world.removeBlock(bPos, false);
-        return true;
+    public boolean canHarvestBlock(BlockState b) {
+        return false;
     }
 
     @Override
     public float getDestroySpeed(ItemStack itemStack, BlockState blockState) {
         Material material = blockState.getMaterial();
         return material == Material.PLANTS ? 16.0f : 10.0f;
-    }
-
-    /**
-     * Want to be OP awe inspiring weapon. So instakill anything not wearing shard armour.
-     * @param stack
-     * @param entity
-     * @param player
-     * @return
-     */
-    @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity entity, LivingEntity player) {
-        if (entity.getTotalArmorValue() < 4) {
-            entity.setHealth(0);
-        }
-        return true;
     }
 
     /**
@@ -96,39 +87,44 @@ public class ShardBladeItem extends SwordItem {
         return attributeModifiers;
     }
 
-    /**
-     * If right click while holding shardblade should bond it.
-     * @param worldIn
-     * @param playerIn
-     * @param handIn
-     * @return
-     */
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
-
-        CompoundNBT compoundnbt = itemStack.getTag();
-        String playerId = playerIn.getDisplayNameAndUUID().getString();
-        if (compoundnbt == null) {
-            itemStack.setTag(new CompoundNBT());
-            compoundnbt = itemStack.getTag();
-            compoundnbt.putString("player", playerIn.getName().getString());
-            compoundnbt.putString("name", this.name);
+        IPlayerInfo playerInfo = PlayerInfo.getFromPlayer(playerIn);
+        if (playerInfo.isMyBlade(itemStack)) {
+            return ActionResult.resultPass(itemStack);
         }
-        if (compoundnbt.getString("player").equals("Dev")) {
-            compoundnbt.putString("player", playerId);
-            playerIn.sendMessage(new StringTextComponent(
-                    "You have bonded " + compoundnbt.getString("name"))
-            );
-        } else if (!compoundnbt.getString("player").equals(playerIn.getName().getString())) {
-            playerIn.sendMessage(new StringTextComponent(
-                    "You cannot claim this blade " + compoundnbt.getString("player") + " " + playerIn.getName().getString() + " " + playerIn.getDisplayName())
-            );
-        } else {
-            playerIn.sendMessage(new StringTextComponent(
-                    "Your name is " + playerIn.getName().getString() + playerIn.getDisplayName()));
-        }
-        return ActionResult.resultPass(playerIn.getHeldItem(handIn));
+        return ActionResult.resultConsume(playerIn.getHeldItem(handIn));
     }
 
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.SPEAR;
+    }
+
+    public int getUseDuration(ItemStack stack) {
+        return 32;
+    }
+
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        if (entityLiving instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) entityLiving;
+            IPlayerInfo playerInfo = PlayerInfo.getFromPlayer(player);
+            String action;
+            if (playerInfo.isBondedTo(stack)) {
+                playerInfo.unbondBlade(stack);
+                action = "You have unbonded ";
+                if (stack.getItem().equals(ItemInit.windrunner_honourblade)) {//|| ea of honourblades
+                    //set player order to spren order
+                }
+            } else {
+                playerInfo.bondBlade(stack, false);
+                action = "You have bonded ";
+                if (stack.getItem().equals(ItemInit.windrunner_honourblade)) {
+                    //set player order
+                }
+            }
+            player.sendMessage(new StringTextComponent(action + stack.getDisplayName()));
+        }
+        return stack;
+    }
 }

@@ -30,6 +30,13 @@ public class StormlightModPacketHandler {
                 PlayerCapabilityPacket::new,
                 PlayerCapabilityPacket::handle
         );
+        INSTANCE.registerMessage(
+                nextID(),
+                PlayerPressButtonPacket.class,
+                PlayerPressButtonPacket::encode,
+                PlayerPressButtonPacket::new,
+                PlayerPressButtonPacket::handle
+        );
         //in order to do other packets copy above exactly but replace packet class (obviously)
     }
 }
